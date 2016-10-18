@@ -1,12 +1,29 @@
 require "oled"
 
 init_set()
-gpio.mode(3,gpio.OUTPUT)
-gpio.write(3,gpio.LOW)
-gpio.mode(5,gpio.OUTPUT)
-gpio.write(5,gpio.LOW) 
-gpio.mode(8,gpio.OUTPUT)
-gpio.write(8,gpio.HIGH)
+gpio.mode(1,gpio.OUTPUT);
+gpio.write(1,gpio.LOW);
+gpio.mode(8,gpio.OUTPUT);
+gpio.write(8,gpio.LOW);
+gpio.mode(0,gpio.OUTPUT)
+gpio.write(0,gpio.HIGH)
+
+--usb下载口朝向车头--
+local R_CW = 5 --右脚正转
+local R_ACW = 4 --右脚反转
+local L_CW = 2 --左脚正转
+local L_ACW = 3 --左脚反转
+
+pwm.setup(R_CW,100,200)
+pwm.setup(R_ACW,100,200)
+pwm.setup(L_CW,100,200) 
+pwm.setup(L_ACW,100,200) 
+
+pwm.start(R_CW)
+pwm.start(R_ACW)
+pwm.start(L_CW)
+pwm.start(L_ACW)
+    
 analog_value = adc.read(0)
 if analog_value >= 800 then
 	file.remove("config.lua")

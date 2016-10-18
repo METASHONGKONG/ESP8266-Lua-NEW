@@ -22,10 +22,10 @@ local b
 local w
 
 --usb下载口朝向车头--
-local R_D0 = 0 --右脚正反转
-local R_D5 = 5 --右脚马达
-local L_D4 = 4 --左脚正反转
-local L_D3 = 3 --左脚马达
+local R_CW = 5 --右脚正转
+local R_ACW = 4 --右脚反转
+local L_CW = 2 --左脚正转
+local L_ACW = 3 --左脚反转
 
 
 
@@ -100,11 +100,15 @@ if pin == nil then
 end
 --
 function car_init()
-	gpio.mode(R_D0,gpio.OUTPUT)
-	gpio.mode(R_D5,gpio.OUTPUT)
-	gpio.mode(L_D4,gpio.OUTPUT)
-	gpio.mode(L_D3,gpio.OUTPUT)
-	
+    pwm.setup(R_CW,100,200)
+    pwm.setup(R_ACW,100,200)
+    pwm.setup(L_CW,100,200) 
+    pwm.setup(L_ACW,100,200) 
+
+    pwm.start(R_CW)
+    pwm.start(R_ACW)
+    pwm.start(L_CW)
+    pwm.start(L_ACW)
 end
 
 
@@ -135,11 +139,11 @@ end
 end
 
 	if mode == "analog" then
-		gpio.mode(8,gpio.OUTPUT)
+		gpio.mode(0,gpio.OUTPUT)
 		if pin == 0 then
-			gpio.write(8,gpio.HIGH)
+			gpio.write(0,gpio.HIGH)
 		else
-			gpio.write(8,gpio.LOW)
+			gpio.write(0,gpio.LOW)
 		end
 		value = adc.read(0)
 		answer['return_value'] = value
@@ -151,43 +155,46 @@ end
   
   if mode == "forward" then 
 	
-		gpio.write(R_D5,gpio.HIGH)
-		gpio.write(L_D3,gpio.HIGH)
-		gpio.write(R_D0,gpio.HIGH)
-		gpio.write(L_D4,gpio.LOW)
+        pwm.setduty(R_CW,1000) 
+        pwm.setduty(R_ACW,0)
+        pwm.setduty(L_ACW,0)
+        pwm.setduty(L_CW,1000) 
+        
 		answer['message'] = "car forward now... "   
 		
 		
 	  elseif mode == "backward" then
 		
 		
-		gpio.write(R_D5,gpio.HIGH)
-		gpio.write(L_D3,gpio.HIGH)
-		gpio.write(R_D0,gpio.LOW)
-		gpio.write(L_D4,gpio.HIGH)
+        pwm.setduty(R_CW,0) 
+        pwm.setduty(R_ACW,1000)
+        pwm.setduty(L_ACW,1000)
+        pwm.setduty(L_CW,0) 
 		answer['message'] = "car backward now... " 
 		
 		
 	  elseif  mode == "left" then
 
-		gpio.write(R_D5,gpio.HIGH)
-		gpio.write(L_D3,gpio.HIGH)
-		gpio.write(L_D4,gpio.HIGH)
-		gpio.write(R_D0,gpio.HIGH)
+        pwm.setduty(R_CW,0) 
+        pwm.setduty(R_ACW,1000)
+        pwm.setduty(L_ACW,0)
+        pwm.setduty(L_CW,1000) 
 		answer['message'] = "car left now... " 
 	  elseif mode == "right" then
 
-		gpio.write(R_D5,gpio.HIGH)
-		gpio.write(L_D3,gpio.HIGH)
-		gpio.write(R_D0,gpio.LOW)
-		gpio.write(L_D4,gpio.LOW)
+        pwm.setduty(R_CW,1000) 
+        pwm.setduty(R_ACW,0)
+        pwm.setduty(L_ACW,1000)
+        pwm.setduty(L_CW,0) 
 		
 		
 		answer['message'] = "car right now... " 
 
 	  elseif mode == "stop" then
-		gpio.write(R_D5,gpio.LOW)
-		gpio.write(L_D3,gpio.LOW)
+        pwm.setduty(R_CW,200) 
+        pwm.setduty(R_ACW,200)
+        pwm.setduty(L_ACW,200)
+        pwm.setduty(L_CW,200) 
 		answer['message'] = "car stop now... " 
 	end	
 

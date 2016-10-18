@@ -1,2 +1,2 @@
-ssid="METAS HONG KONG"
-pwd="aabbccddee"
+ssid="laihome"
+pwd="124333396"

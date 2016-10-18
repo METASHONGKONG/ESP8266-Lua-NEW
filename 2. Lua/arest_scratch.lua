@@ -9,6 +9,11 @@ function aREST.handle(conn, request)
     local command;
     local password;
     local answer = {};
+    
+    local R_CW = 5 --右脚正转
+    local R_ACW = 4 --右脚反转
+    local L_CW = 2 --左脚正转
+    local L_ACW = 3 --左脚反转
 
     -- HTTP Request Parser
     local httprequest = string.sub(request, 1, string.find(request, "\r\n") + 1);
@@ -39,20 +44,24 @@ function aREST.handle(conn, request)
     if mode == "reset" then
         pwm.stop(1);
         pwm.stop(2);
-		pwm.stop(4);
-        pwm.stop(8);
-        gpio.mode(0,gpio.OUTPUT); -- Ken
-        gpio.mode(4,gpio.OUTPUT); -- Ken
+		pwm.stop(3);
+        pwm.stop(4);
+
+        pwm.setup(R_CW,100,200)
+        pwm.setup(R_ACW,100,200)
+        pwm.setup(L_CW,100,200) 
+        pwm.setup(L_ACW,100,200) 
+
+        pwm.start(R_CW)
+        pwm.start(R_ACW)
+        pwm.start(L_CW)
+        pwm.start(L_ACW)
+        
         gpio.mode(1,gpio.OUTPUT);
         gpio.write(1,gpio.LOW);
-        gpio.mode(2,gpio.OUTPUT);
-        gpio.write(2,gpio.LOW);
-		gpio.mode(3,gpio.OUTPUT);
-		gpio.write(3,gpio.LOW);
-		gpio.mode(5,gpio.OUTPUT);
-		gpio.write(5,gpio.LOW);
-		gpio.mode(8,gpio.OUTPUT);
-		gpio.write(8,gpio.LOW);
+        gpio.mode(8,gpio.OUTPUT);
+        gpio.write(8,gpio.LOW);
+
         answer["message"] = "Pin Reset";
         
     elseif mode == "mode" then
@@ -82,11 +91,11 @@ function aREST.handle(conn, request)
 		end
 	  
 	elseif mode == "analog" then
-		gpio.mode(8,gpio.OUTPUT);
+		gpio.mode(0,gpio.OUTPUT);
 		if pin == "0" then
-			gpio.write(8, gpio.HIGH);
+			gpio.write(0, gpio.HIGH);
 		else
-			gpio.write(8, gpio.LOW);
+			gpio.write(0, gpio.LOW);
 		end
         answer["return_value"] = tonumber(adc.read(0));
     
@@ -125,33 +134,31 @@ function aREST.handle(conn, request)
         answer["message"] = "pin"..pin.."servo:"..num;
     
     elseif mode == "car" then
-    gpio.mode(0,gpio.OUTPUT);
-    gpio.mode(3,gpio.OUTPUT);
-    gpio.mode(4,gpio.OUTPUT);
-    gpio.mode(5,gpio.OUTPUT);
         if command=="backward" or  command=="backwards" then
-            gpio.write(3,gpio.HIGH);
-            gpio.write(5,gpio.HIGH);
-            gpio.write(0,gpio.LOW);
-            gpio.write(4,gpio.HIGH);
+            pwm.setduty(R_CW,1000) 
+            pwm.setduty(R_ACW,0)
+            pwm.setduty(L_ACW,0)
+            pwm.setduty(L_CW,1000) 
         elseif command=="forward" or command=="forwards"then
-            gpio.write(3,gpio.HIGH);
-            gpio.write(5,gpio.HIGH);
-            gpio.write(0,gpio.HIGH);
-            gpio.write(4,gpio.LOW);
+            pwm.setduty(R_CW,1000) 
+            pwm.setduty(R_ACW,0)
+            pwm.setduty(L_ACW,0)
+            pwm.setduty(L_CW,1000) 
         elseif command=="left" then
-            gpio.write(3,gpio.HIGH);
-            gpio.write(5,gpio.HIGH);
-			gpio.write(0,gpio.HIGH);
-            gpio.write(4,gpio.HIGH);
+            pwm.setduty(R_CW,0) 
+            pwm.setduty(R_ACW,1000)
+            pwm.setduty(L_ACW,0)
+            pwm.setduty(L_CW,1000)
         elseif command=="right" then
-            gpio.write(3,gpio.HIGH);
-            gpio.write(5,gpio.HIGH);
-            gpio.write(0,gpio.LOW);
-            gpio.write(4,gpio.LOW);
+            pwm.setduty(R_CW,1000) 
+            pwm.setduty(R_ACW,0)
+            pwm.setduty(L_ACW,1000)
+            pwm.setduty(L_CW,0)
         else
-            gpio.write(3,gpio.LOW);
-            gpio.write(5,gpio.LOW);
+            pwm.setduty(R_CW,200) 
+            pwm.setduty(R_ACW,200)
+            pwm.setduty(L_ACW,200)
+            pwm.setduty(L_CW,200) 
         end
 		
     end

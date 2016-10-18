@@ -1,9 +1,9 @@
 
 local d1 = 1
-local d8 = 8
+local d0 = 0
 gpio.mode(d1,gpio.OUTPUT)
-gpio.mode(d8,gpio.OUTPUT)
-gpio.write(d8,gpio.HIGH)
+gpio.mode(d0,gpio.OUTPUT)
+gpio.write(d0,gpio.HIGH)
 
 function read_PM()
 	gpio.write(d1,gpio.LOW)

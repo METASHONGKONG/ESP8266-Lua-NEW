@@ -1,2 +1,2 @@
-value="snap"
+value="scratch"
 --choose project

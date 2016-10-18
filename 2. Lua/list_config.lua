@@ -33,8 +33,7 @@ srv:listen(80,function(conn)
 		buf = buf.."Project:<select name = 'num'>"
 		buf = buf.."<option value = snap>snap</option>"
 		buf = buf.."<option value = scratch>scratch</option>"
-		buf = buf.."<option value = car>car</option>"
-		buf = buf.."<option value = test>test</option></select></br>"
+		buf = buf.."<option value = car>car</option></select></br>"
 		buf = buf.."<button type='submit'>save</button></form></body><html>"
 		client:send(buf)
 		client:close()
