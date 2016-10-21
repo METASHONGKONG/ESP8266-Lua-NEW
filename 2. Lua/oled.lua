@@ -25,7 +25,7 @@ function display_word(word)
 	until disp:nextPage() == false
 end
 
-function display_runconfig(ssid,pwd)
+function display_wifi(ssid,pwd)
     disp:firstPage();
     repeat
         disp:drawStr(0,0, "WIFI");
@@ -34,7 +34,7 @@ function display_runconfig(ssid,pwd)
     until disp:nextPage() == false
 end
 
-function display_deviceid(ssid,pwd,id)
+function display_ip(ssid,pwd,id)
     disp:firstPage();
     repeat
       

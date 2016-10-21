@@ -61,17 +61,16 @@ if pcall(function ()require "config_wifi" end) then
             else	               
                 ip = wifi.sta.getip()
                 if timeout < 4 then                   
-                    display_runconfig(ssid,pwd)
+                    display_wifi(ssid,pwd)
                 else
                     display_word("Connecting..") 
                 end
             end
         else
             tmr.stop(0)
-            
-            
-            print("snap working")            
-            rest = require "arest_snap"
+                        
+            print('IP: ', ip)        
+            rest = require "arest"
                 
             if timeout>=30 then
                 display_word("  DC Mode") 
@@ -79,7 +78,7 @@ if pcall(function ()require "config_wifi" end) then
             else
                 len_num = string.len(ip)
                 display_word("  Ready")
-                tmr.alarm(0,5000,0,function() display_deviceid(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
+                tmr.alarm(0,5000,0,function() display_ip(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
                             
             end
         
@@ -103,7 +102,7 @@ if pcall(function ()require "config_wifi" end) then
     end)
     
 else
-    print("run_config")
+    print("run_config: input wifi")
     require "run_config"
     display_word("Input Wifi")
     tmr.alarm(0,5000,0,function()
