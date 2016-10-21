@@ -44,9 +44,9 @@ if pcall(function ()require "config_wifi" end) then
         
         if ip == nil then
 
-             print("please wait")
+            print("please wait")
             
-            if timeout >= 40 then
+            if timeout >= 30 then
                 --file.remove("config_wifi.lua")
                 cfg = {}
                 cfg.ssid = "Metas"..node.chipid()
@@ -55,33 +55,41 @@ if pcall(function ()require "config_wifi" end) then
                 cfg.pwd = "12345678"
                 wifi.ap.config(cfg)  
                 ip = wifi.ap.getip()
-                init_display(cfg.ssid,cfg.pwd,ip)
-            else	
-                display_runconfig(ssid,pwd)
-                ip = wifi.sta.getip()
                 
+                display_word(" Time Out")                                              
+                
+            else	               
+                ip = wifi.sta.getip()
+                if timeout < 4 then                   
+                    display_runconfig(ssid,pwd)
+                else
+                    display_word("Connecting..") 
+                end
             end
         else
             tmr.stop(0)
             
-            print("snap working")
-            work_display("snap")	
+            
+            print("snap working")            
             rest = require "arest_snap"
                 
-            if timeout>=40 then
-                display_deviceid(cfg.ssid,cfg.pwd,ip)
+            if timeout>=30 then
+                display_word("  DC Mode") 
+                tmr.alarm(0,5000,0,function() init_display(cfg.ssid,cfg.pwd,ip)	end) 
             else
                 len_num = string.len(ip)
-                display_deviceid(ssid,string.sub(ip,1,7),string.sub(ip,8,len_num))
-            
-        end
-            ip = nil
-            cfg = nil
-            ssid = nil 
-            pwd = nil
-            l = nil
-            len_num  = nil
-            deviceid = nil
+                display_word("  Ready")
+                tmr.alarm(0,5000,0,function() display_deviceid(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
+                            
+            end
+        
+            --ip = nil
+            --cfg = nil
+            --ssid = nil 
+            --pwd = nil
+            --l = nil
+            --len_num  = nil
+            --deviceid = nil
 
             srv=net.createServer(net.TCP) 
             srv:listen(80,function(conn)
@@ -90,12 +98,16 @@ if pcall(function ()require "config_wifi" end) then
               end)
               conn:on("sent",function(conn) conn:close() end)
             end)
+        
         end
     end)
     
 else
     print("run_config")
     require "run_config"
-    init_display(cfg.ssid,cfg.pwd,wifi.ap.getip())
+    display_word("Input Wifi")
+    tmr.alarm(0,5000,0,function()
+        init_display(cfg.ssid,cfg.pwd,wifi.ap.getip())
+    end)  
 
 end
