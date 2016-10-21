@@ -33,7 +33,7 @@ print(analog_value)
 if pcall(function ()require "config_wifi" end) then
         
     srv = nil
-    wifi.setmode(wifi.STATIONAP)
+    wifi.setmode(wifi.STATION)
     wifi.sta.config(ssid,pwd)
     wifi.sta.connect()
     local timeout = 0
@@ -54,8 +54,8 @@ if pcall(function ()require "config_wifi" end) then
                 cfg.ssid = string.sub(cfg.ssid,1,l-2)
                 cfg.pwd = "12345678"
                 wifi.ap.config(cfg)  
-                ip = wifi.ap.getip()
-                
+                wifi.setmode(wifi.SOFTAP)
+                ip = wifi.ap.getip()                        
                 display_word(" Time Out")                                              
                 
             else	               
