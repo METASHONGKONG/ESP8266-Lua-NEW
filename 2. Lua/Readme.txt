@@ -1,4 +1,4 @@
-﻿Step (How to use):
+##Step (How to use):
 1.	Firstly, use your computer or smart phone to connect the wifi emitted from NodeOne.
 In this example, 
 Wifi: Metas138927, password: 12345678
