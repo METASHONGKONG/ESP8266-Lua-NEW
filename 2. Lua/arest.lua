@@ -197,32 +197,32 @@ function aREST.handle(conn, request)
   if mode == "forward" then 
         pwm.setduty(R_CW,1000) 
         pwm.setduty(R_ACW,0)
-        pwm.setduty(L_ACW,0)
-        pwm.setduty(L_CW,1000) 
+        pwm.setduty(L_CW,0)
+        pwm.setduty(L_ACW,1000) 
         answer['message'] = "car forward now... "   
       elseif mode == "backward" then
         pwm.setduty(R_CW,0) 
         pwm.setduty(R_ACW,1000)
-        pwm.setduty(L_ACW,1000)
-        pwm.setduty(L_CW,0) 
+        pwm.setduty(L_CW,1000)
+        pwm.setduty(L_ACW,0) 
         answer['message'] = "car backward now... " 
       elseif  mode == "left" then
-        pwm.setduty(R_CW,0) 
-        pwm.setduty(R_ACW,1000)
-        pwm.setduty(L_ACW,0)
-        pwm.setduty(L_CW,1000) 
-        answer['message'] = "car left now... " 
-      elseif mode == "right" then
         pwm.setduty(R_CW,1000) 
         pwm.setduty(R_ACW,0)
-        pwm.setduty(L_ACW,1000)
-        pwm.setduty(L_CW,0) 
+        pwm.setduty(L_CW,1000)
+        pwm.setduty(L_ACW,0) 
+        answer['message'] = "car left now... " 
+      elseif mode == "right" then
+        pwm.setduty(R_CW,0) 
+        pwm.setduty(R_ACW,1000)
+        pwm.setduty(L_CW,0)
+        pwm.setduty(L_ACW,1000) 
         answer['message'] = "car right now... " 
       elseif mode == "stop" then
         pwm.setduty(R_CW,200) 
         pwm.setduty(R_ACW,200)
-        pwm.setduty(L_ACW,200)
-        pwm.setduty(L_CW,200) 
+        pwm.setduty(L_CW,200)
+        pwm.setduty(L_ACW,200) 
         answer['message'] = "car stop now... " 
     end	
 
