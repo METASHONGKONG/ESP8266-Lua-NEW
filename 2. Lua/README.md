@@ -41,3 +41,16 @@ http://IP/temperature | Return temperature
 http://IP/humidity | Return humidity
 http://IP/rgb/address/off | Turn off rgb (address: 0x40)
 http://IP/rgb/address/r/g/b/w | Control rgb (address: 0x40, rgbw: 0~100)
+
+
+
+
+###3. METAS Car API
+
+Link | Description 
+----|------
+http://IP/forward | Move forward
+http://IP/backward | Move backward
+http://IP/left | Turn left
+http://IP/right | Turn right
+http://IP/stop | Stop
