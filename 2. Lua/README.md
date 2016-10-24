@@ -14,6 +14,8 @@ Wifi: Metas138927, password: 12345678
 Direct control mode: The NodeOne act as an router, use your mobile phone to connect the NodeOne and control it directly.
 
 ###1. General API
+These APIs are general API that can control all function of the NodeOne. However, these APIs are for more advanced user.
+For details, please refer to http://www.funmetas.com.hk/nodeone/
 
 Link | Description 
 ----|------
@@ -29,6 +31,14 @@ http://IP/analog/pin | Read the analog value (pin: 0/1)
 
 
 ###2. Function pin API
+Actually, there are 5 main functions for our NodeOne. Thus, the below APIs are for your EASY control.
+
+1.	Input X2
+2.	Output X2
+3.	Servo X4
+4.	Motor X2
+5.	I2C X1 (temperature/humidity/RGB)
+
 
 Link | Description 
 ----|------
@@ -46,6 +56,7 @@ http://IP/rgb/address/r/g/b/w | Control rgb (address: 0x40, rgbw: 0~100)
 
 
 ###3. METAS Car API
+The below API is only for METAS car. You can refer to https://www.youtube.com/watch?v=zPAyf31GXbs
 
 Link | Description 
 ----|------
