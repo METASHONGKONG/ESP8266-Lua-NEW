@@ -37,7 +37,7 @@
 				file.close()
 				node.restart()
 			end
-            buf = buf.."<!DOCTYPE html><html><head><meta http-equiv=Content-Type content=\"text/html;charset=utf-8\"></head>"
+            buf = buf.."HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n <!DOCTYPE html><html><head><meta http-equiv=Content-Type content=\"text/html;charset=utf-8\"></head>"
 			buf = buf.."<body><h1>Wifi Configuration</h1>" 
 			buf = buf.."Please input the required WIFI and password，then click 'save' button.</br>"
             buf = buf.."(Note：When wifi ID contain space, it will be changed to \"+\" signal，for example, METAS Hong Kong will be changed to METAS+Hong+Kong)</br></br>"
