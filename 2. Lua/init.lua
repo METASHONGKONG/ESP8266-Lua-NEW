@@ -46,7 +46,7 @@ if pcall(function ()require "config_wifi" end) then
 
             print("please wait")
             
-            if timeout >= 30 then
+            if timeout >= 25 then
                 --file.remove("config_wifi.lua")
                 cfg = {}
                 cfg.ssid = "Metas"..node.chipid()
@@ -72,8 +72,8 @@ if pcall(function ()require "config_wifi" end) then
             print('IP: ', ip)        
             rest = require "arest"
                 
-            if timeout>=30 then
-                display_word("  DC Mode") 
+            if timeout>=25 then
+                display_word("Direct Mode") 
                 tmr.alarm(0,5000,0,function() init_display(cfg.ssid,cfg.pwd,ip)	end) 
             else
                 len_num = string.len(ip)
