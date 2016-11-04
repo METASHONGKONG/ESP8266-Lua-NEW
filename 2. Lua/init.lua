@@ -25,8 +25,31 @@ pwm.start(L_CW)
 pwm.start(L_ACW)
     
 analog_value = adc.read(0)
+    
 if analog_value >= 800 then
-	file.remove("config_wifi.lua")
+    local timeout = 0    
+    print("Reset mode")
+    tmr.alarm(1,500,1,function()                 
+        timeout = timeout+0.5
+        analog_value = adc.read(0)
+        print("Checking..  "..analog_value)
+        
+        if timeout == 5 then
+            tmr.stop(1)
+        else
+            if analog_value < 100 then
+                tmr.stop(0)
+                timeout = 4.5
+                file.remove("config_wifi.lua")
+                display_word(" Reset OK")
+                print("Reset OK")                
+                tmr.alarm(2,4000,0,function() display_word("Restart...")	end)
+                tmr.alarm(3,5000,0,function() node.restart()	end)                
+                
+                
+            end
+        end
+    end)  
 end
 print(analog_value)
 
@@ -81,14 +104,6 @@ if pcall(function ()require "config_wifi" end) then
                 tmr.alarm(0,5000,0,function() display_ip(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
                             
             end
-        
-            --ip = nil
-            --cfg = nil
-            --ssid = nil 
-            --pwd = nil
-            --l = nil
-            --len_num  = nil
-            --deviceid = nil
 
             srv=net.createServer(net.TCP) 
             srv:listen(80,function(conn)
