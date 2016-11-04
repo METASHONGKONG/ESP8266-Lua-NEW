@@ -39,8 +39,9 @@
 			end
             buf = buf.."HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n <!DOCTYPE html><html><head><meta http-equiv=Content-Type content=\"text/html;charset=utf-8\"></head>"
 			buf = buf.."<body><h1>Wifi Configuration</h1>" 
-			buf = buf.."Please input the required WIFI and password，then click 'save' button.</br>"
-            buf = buf.."(Note：When wifi ID contain space, it will be changed to \"+\" signal，for example, METAS Hong Kong will be changed to METAS+Hong+Kong)</br></br>"
+			buf = buf.."Please input the required WIFI and password，then click 'save' button.</br></br>"
+            buf = buf.."(Note 1： The wifi information will be memorized in NodeOne after this configuration.)</br>"
+            buf = buf.."(Note 2： If you want to reset it, place the pressed button in A0, then re-open NodeOne again. Afterwards, remove button in 5 seconds.)</br></br>"
 			buf = buf.."<form method = 'get' action='http://"..wifi.ap.getip().."'>"
 			buf = buf.."Wifi ID:<input name='sta'></input></br>"
 			buf = buf.."Wifi Password:<input type='password' name='psd'></input><br><br>"
