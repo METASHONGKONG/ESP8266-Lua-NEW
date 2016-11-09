@@ -1,6 +1,4 @@
-# ESP8266-Lua-NEW Version 1.0
-
-It is based on the new board version 1.1 or 1.2 to develop.
+# ESP8266-Lua (NodeOne Version 1)
 
 ###How to import program to the ESP8266?
 
