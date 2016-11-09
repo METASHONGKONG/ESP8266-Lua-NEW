@@ -1,7 +1,18 @@
 # NodeOne OS V1.1
 
+http://www.funmetas.com.hk/nodeone/
+
 ## Overview
 This is the source code of operation System for NodeOne (1st generation). The main programming language is written in Lua.
+
+##How to import program to the ESP8266?
+
+1. Using ESP8266Flasher64.exe to import "1.firmware" into ESP8266
+2. Using Lualoader or ESPlorer to load all "2. Lua" into ESP8266
+
+Lualoader: http://benlo.com/esp8266/
+
+ESPlorer: http://esp8266.ru/esplorer/
 
 ## History
 
@@ -18,12 +29,3 @@ Version 1.0 [22/Oct/2016]
 * Deleted mode selection
 * Made it more user-friendly
 * Removed the AP mode when NodeOne is connected to WIFI network
-
-##How to import program to the ESP8266?
-
-1. Using ESP8266Flasher64.exe to import "1.firmware" into ESP8266
-2. Using Lualoader or ESPlorer to load all "2. Lua" into ESP8266
-
-Lualoader: http://benlo.com/esp8266/
-
-ESPlorer: http://esp8266.ru/esplorer/
