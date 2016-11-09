@@ -96,19 +96,6 @@ function aREST.handle(conn, request)
     end
     
     --
-    function car_init()
-        pwm.setup(R_CW,100,200)
-        pwm.setup(R_ACW,100,200)
-        pwm.setup(L_CW,100,200) 
-        pwm.setup(L_ACW,100,200) 
-
-        pwm.start(R_CW)
-        pwm.start(R_ACW)
-        pwm.start(L_CW)
-        pwm.start(L_ACW)
-    end
-
-    car_init()
 
     --------------General---------------------
     if mode == "mode" then

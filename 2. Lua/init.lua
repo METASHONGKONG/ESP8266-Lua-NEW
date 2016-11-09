@@ -14,10 +14,10 @@ local R_ACW = 4 --右脚反转
 local L_CW = 2 --左脚正转
 local L_ACW = 3 --左脚反转
 
-pwm.setup(R_CW,100,200)
-pwm.setup(R_ACW,100,200)
-pwm.setup(L_CW,100,200) 
-pwm.setup(L_ACW,100,200) 
+pwm.setup(R_CW,100,70)
+pwm.setup(R_ACW,100,70)
+pwm.setup(L_CW,100,70) 
+pwm.setup(L_ACW,100,70) 
 
 pwm.start(R_CW)
 pwm.start(R_ACW)
