@@ -3,7 +3,7 @@
 	cfg = {}
 	cfg.ssid = "Metas"..node.chipid()
 	l = string.len(cfg.ssid)
-	cfg.ssid = string.sub(cfg.ssid,1,l-2)
+	cfg.ssid = string.sub(cfg.ssid,1,l-1)
 	cfg.pwd = "12345678"
 	--wifi.setmode(wifi.SOFTAP)  
     wifi.ap.config(cfg)  

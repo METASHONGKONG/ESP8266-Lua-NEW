@@ -82,7 +82,7 @@ tmr.alarm(4,5000,0,function()
                     cfg = {}
                     cfg.ssid = "Metas"..node.chipid()
                     l = string.len(cfg.ssid)
-                    cfg.ssid = string.sub(cfg.ssid,1,l-2)
+                    cfg.ssid = string.sub(cfg.ssid,1,l-1)
                     cfg.pwd = "12345678"
                     wifi.ap.config(cfg)  
                     wifi.setmode(wifi.SOFTAP)
