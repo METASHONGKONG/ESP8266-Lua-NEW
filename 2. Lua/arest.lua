@@ -151,11 +151,11 @@ function aREST.handle(conn, request)
         num = tonumber(command)
         if num <= 0 then
             num = 0
-        elseif  num >= 120 then
-            num=120
+        elseif  num >= 180 then
+            num=180
             
         end
-        pwm.setup(pin,50,num*1023/120)
+        pwm.setup(pin,50,math.floor(33+((128-33)*num/180)))
         pwm.start(pin)
         answer['message'] = ""..pin..":"..num
     end
