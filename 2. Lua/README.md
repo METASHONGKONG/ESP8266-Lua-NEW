@@ -44,7 +44,7 @@ Link | Description
 ----|------
 http://IP/input/pin | Read input pin (pin: 0/1) 
 http://IP/output/pin/num | Set output pin (pin: 0~8, num: 0~1023)
-http://IP/servo/pin/num | Set servo pin (pin: 0~8, num: 0~120)
+http://IP/servo/pin/num | Set servo pin (pin: 1~4, num: 0~180)
 http://IP/motor/No/dir/num | Set motor (No: 1/2, dir: cw/acw, num: 0~1023)
 http://IP/PM | Return PM value
 http://IP/temperature | Return temperature 
