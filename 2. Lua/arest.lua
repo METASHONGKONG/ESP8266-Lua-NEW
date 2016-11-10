@@ -111,9 +111,11 @@ function aREST.handle(conn, request)
 
     if mode == "digital" then
         if command == "0" then 
+            gpio.mode(pin, gpio.OUTPUT)
             gpio.write(pin, gpio.LOW)
             answer['message'] = "" .. pin .. " set to 0"   
         elseif command == "1" then
+            gpio.mode(pin, gpio.OUTPUT)
             gpio.write(pin, gpio.HIGH)
             answer['message'] = "" .. pin .. " set to 1" 
         elseif command == "r" then
