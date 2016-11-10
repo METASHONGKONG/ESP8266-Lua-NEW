@@ -57,10 +57,10 @@ print(analog_value)
 
 --Welcome page with OS version--
 display_word("  Welcome")
-tmr.alarm(4,5000,0,function() display_two_row("NodeOne"," OS Ver1.3") end)
+
 
 --Input wifi/connect wifi--
-tmr.alarm(5,7000,0,function()
+tmr.alarm(4,5000,0,function()
     if pcall(function ()require "config_wifi" end) then
             
         srv = nil
@@ -127,8 +127,9 @@ tmr.alarm(5,7000,0,function()
     else
         print("run_config: input wifi")
         require "run_config"
-        display_word("Input Wifi")
-        tmr.alarm(0,5000,0,function()
+        display_two_row("NodeOne"," OS Ver1.3")
+        tmr.alarm(5,5000,0,function()  display_word("Input Wifi") end)
+        tmr.alarm(0,10000,0,function()
             init_display(cfg.ssid,cfg.pwd,wifi.ap.getip())
         end)  
 
