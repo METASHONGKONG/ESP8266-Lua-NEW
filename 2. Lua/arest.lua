@@ -140,6 +140,9 @@ function aREST.handle(conn, request)
             gpio.write(0,gpio.LOW)
         end
         value = adc.read(0)
+        if value == 1024 then
+            value = 1023
+        end
         answer['return_value'] = value
     end
       
