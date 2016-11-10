@@ -72,7 +72,6 @@ function aREST.handle(conn, request)
                     b=string.sub(request_handle,0,(e-1))
                     request_handle = string.sub(request_handle,(e+1))
                     w = request_handle
-            
                 end
             end
         end        
@@ -94,8 +93,6 @@ function aREST.handle(conn, request)
             if key == mode then answer[key] = value end
         end
     end
-    
-    --
 
     --------------General---------------------
     if mode == "mode" then
@@ -127,6 +124,11 @@ function aREST.handle(conn, request)
 
     if mode == "pwm" or mode == "output" then
 		num	= tonumber(command)
+        if num <= 0 then
+            num = 0
+        elseif  num >= 1023 then
+            num=1023
+        end
 		pwm.setup(pin,50,num)	
 		pwm.start(pin)
 		answer['message'] = ""..pin..":"..num	
@@ -153,7 +155,6 @@ function aREST.handle(conn, request)
             num = 0
         elseif  num >= 180 then
             num=180
-            
         end
         pwm.setup(pin,50,math.floor(33+((128-33)*num/180)))
         pwm.start(pin)
