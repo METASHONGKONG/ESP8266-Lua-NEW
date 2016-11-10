@@ -19,10 +19,10 @@ function aREST.handle(conn, request)
     local w
 
     --usb下载口朝向车头--
-    local R_CW = 5 --右脚正转
-    local R_ACW = 4 --右脚反转
-    local L_CW = 2 --左脚正转
-    local L_ACW = 3 --左脚反转
+    local M2_CW = 5 --右脚正转
+    local M2_ACW = 4 --右脚反转
+    local M1_CW = 2 --左脚正转
+    local M1_ACW = 3 --左脚反转
 
     -- Find start
     local e = string.find(request, "/")
@@ -163,56 +163,56 @@ function aREST.handle(conn, request)
     if mode == "motor" then
         if pin == 1 then 
             if command == "cw" then 
-                pwm.setduty(2,g) 
-                pwm.setduty(3,0)
+                pwm.setduty(M1_CW,g) 
+                pwm.setduty(M1_ACW,0)
                 answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command   
             elseif command == "acw" then
-                pwm.setduty(2,0) 
-                pwm.setduty(3,g)
+                pwm.setduty(M1_CW,0) 
+                pwm.setduty(M1_ACW,g)
                 answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command  
             end 
         elseif pin == 2 then
             if command == "cw" then 
-                pwm.setduty(4,0) 
-                pwm.setduty(5,g)
+                pwm.setduty(M2_ACW,0) 
+                pwm.setduty(M2_CW,g)
                 answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command   
             elseif command == "acw" then
-                pwm.setduty(4,g) 
-                pwm.setduty(5,0)
+                pwm.setduty(M2_ACW,g) 
+                pwm.setduty(M2_CW,0)
                 answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command  
             end 
         end
     end
     
   if mode == "forward" then 
-        pwm.setduty(R_CW,1000) 
-        pwm.setduty(R_ACW,0)
-        pwm.setduty(L_CW,0)
-        pwm.setduty(L_ACW,1000) 
+        pwm.setduty(M2_CW,1000) 
+        pwm.setduty(M2_ACW,0)
+        pwm.setduty(M1_CW,0)
+        pwm.setduty(M1_ACW,1000) 
         answer['message'] = "car forward now... "   
       elseif mode == "backward" then
-        pwm.setduty(R_CW,0) 
-        pwm.setduty(R_ACW,1000)
-        pwm.setduty(L_CW,1000)
-        pwm.setduty(L_ACW,0) 
+        pwm.setduty(M2_CW,0) 
+        pwm.setduty(M2_ACW,1000)
+        pwm.setduty(M1_CW,1000)
+        pwm.setduty(M1_ACW,0) 
         answer['message'] = "car backward now... " 
       elseif  mode == "left" then
-        pwm.setduty(R_CW,1000) 
-        pwm.setduty(R_ACW,0)
-        pwm.setduty(L_CW,1000)
-        pwm.setduty(L_ACW,0) 
+        pwm.setduty(M2_CW,1000) 
+        pwm.setduty(M2_ACW,0)
+        pwm.setduty(M1_CW,1000)
+        pwm.setduty(M1_ACW,0) 
         answer['message'] = "car left now... " 
       elseif mode == "right" then
-        pwm.setduty(R_CW,0) 
-        pwm.setduty(R_ACW,1000)
-        pwm.setduty(L_CW,0)
-        pwm.setduty(L_ACW,1000) 
+        pwm.setduty(M2_CW,0) 
+        pwm.setduty(M2_ACW,1000)
+        pwm.setduty(M1_CW,0)
+        pwm.setduty(M1_ACW,1000) 
         answer['message'] = "car right now... " 
       elseif mode == "stop" then
-        pwm.setduty(R_CW,200) 
-        pwm.setduty(R_ACW,200)
-        pwm.setduty(L_CW,200)
-        pwm.setduty(L_ACW,200) 
+        pwm.setduty(M2_CW,200) 
+        pwm.setduty(M2_ACW,200)
+        pwm.setduty(M1_CW,200)
+        pwm.setduty(M1_ACW,200) 
         answer['message'] = "car stop now... " 
     end	
 

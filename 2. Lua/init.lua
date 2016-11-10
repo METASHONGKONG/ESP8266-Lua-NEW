@@ -10,20 +10,20 @@ gpio.write(8,gpio.LOW);
 gpio.mode(0,gpio.OUTPUT)
 gpio.write(0,gpio.HIGH)
 
-local R_CW = 5 --右脚正转
-local R_ACW = 4 --右脚反转
-local L_CW = 2 --左脚正转
-local L_ACW = 3 --左脚反转
+local M2_CW = 5 --右脚正转
+local M2_ACW = 4 --右脚反转
+local M1_CW = 2 --左脚正转
+local M1_ACW = 3 --左脚反转
 
-pwm.setup(R_CW,50,70)
-pwm.setup(R_ACW,50,70)
-pwm.setup(L_CW,50,70) 
-pwm.setup(L_ACW,50,70) 
+pwm.setup(M2_CW,50,70)
+pwm.setup(M2_ACW,50,70)
+pwm.setup(M1_CW,50,70) 
+pwm.setup(M1_ACW,50,70) 
 
-pwm.start(R_CW)
-pwm.start(R_ACW)
-pwm.start(L_CW)
-pwm.start(L_ACW)
+pwm.start(M2_CW)
+pwm.start(M2_ACW)
+pwm.start(M1_CW)
+pwm.start(M1_ACW)
     
 --Reset network wifi--
 
