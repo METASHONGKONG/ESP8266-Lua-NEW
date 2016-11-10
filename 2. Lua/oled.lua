@@ -37,10 +37,17 @@ end
 function display_ip(ssid,pwd,id)
     disp:firstPage();
     repeat
-      
         disp:drawStr(0,0, ""..pwd);
 		disp:drawStr(0,10, ""..id);
 		disp:drawStr(0,20, "Connected");
+    until disp:nextPage() == false
+end
+
+function display_two_row(first,second)
+    disp:firstPage();
+    repeat
+        disp:drawStr(13,0, ""..first);
+		disp:drawStr(0,20, ""..second);
     until disp:nextPage() == false
 end
 

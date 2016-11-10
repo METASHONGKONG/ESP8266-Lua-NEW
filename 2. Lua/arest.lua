@@ -96,19 +96,6 @@ function aREST.handle(conn, request)
     end
     
     --
-    function car_init()
-        pwm.setup(R_CW,100,200)
-        pwm.setup(R_ACW,100,200)
-        pwm.setup(L_CW,100,200) 
-        pwm.setup(L_ACW,100,200) 
-
-        pwm.start(R_CW)
-        pwm.start(R_ACW)
-        pwm.start(L_CW)
-        pwm.start(L_ACW)
-    end
-
-    car_init()
 
     --------------General---------------------
     if mode == "mode" then
@@ -119,7 +106,7 @@ function aREST.handle(conn, request)
             gpio.mode(pin, gpio.INPUT)
             answer['message'] = "" .. pin .. " set to input"
         elseif command == "p" then
-            pwm.setup(pin, 100, 0);
+            pwm.setup(pin, 50, 0);
             pwm.start(pin);
             answer["message"] = "Pin D" .. pin .. " set to PWM";
         end 
@@ -140,7 +127,7 @@ function aREST.handle(conn, request)
 
     if mode == "pwm" or mode == "output" then
 		num	= tonumber(command)
-		pwm.setup(pin,100,num)	
+		pwm.setup(pin,50,num)	
 		pwm.start(pin)
 		answer['message'] = ""..pin..":"..num	
 	end
@@ -153,6 +140,9 @@ function aREST.handle(conn, request)
             gpio.write(0,gpio.LOW)
         end
         value = adc.read(0)
+        if value == 1024 then
+            value = 1023
+        end
         answer['return_value'] = value
     end
       
@@ -161,11 +151,11 @@ function aREST.handle(conn, request)
         num = tonumber(command)
         if num <= 0 then
             num = 0
-        elseif  num >= 120 then
-            num=120
+        elseif  num >= 180 then
+            num=180
             
         end
-        pwm.setup(pin,100,num*1023/120)
+        pwm.setup(pin,50,math.floor(33+((128-33)*num/180)))
         pwm.start(pin)
         answer['message'] = ""..pin..":"..num
     end
