@@ -20,6 +20,7 @@ Version 1.3 [10/Nov/2016]
 * Bug fix: PWM value must be in the range 0-1023
 * Bug fix: PWM interahcnge with digital, digital can be used
 * Showed the NodeOne OS version page in "input wifi" mode only
+* Showed one more digit of chipID
 * Code consolidation
 
 Version 1.2 [10/Nov/2016]
