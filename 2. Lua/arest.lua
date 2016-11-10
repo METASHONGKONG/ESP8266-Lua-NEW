@@ -106,7 +106,7 @@ function aREST.handle(conn, request)
             gpio.mode(pin, gpio.INPUT)
             answer['message'] = "" .. pin .. " set to input"
         elseif command == "p" then
-            pwm.setup(pin, 100, 0);
+            pwm.setup(pin, 50, 0);
             pwm.start(pin);
             answer["message"] = "Pin D" .. pin .. " set to PWM";
         end 
@@ -127,7 +127,7 @@ function aREST.handle(conn, request)
 
     if mode == "pwm" or mode == "output" then
 		num	= tonumber(command)
-		pwm.setup(pin,100,num)	
+		pwm.setup(pin,50,num)	
 		pwm.start(pin)
 		answer['message'] = ""..pin..":"..num	
 	end
@@ -152,7 +152,7 @@ function aREST.handle(conn, request)
             num=120
             
         end
-        pwm.setup(pin,100,num*1023/120)
+        pwm.setup(pin,50,num*1023/120)
         pwm.start(pin)
         answer['message'] = ""..pin..":"..num
     end
