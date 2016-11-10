@@ -1,9 +1,9 @@
-# NodeOne OS V1.1
+# NodeOne OS Version 1.3
 
 http://www.funmetas.com.hk/nodeone/
 
 ## Overview
-This is the source code of operation System for NodeOne (1st generation). The main programming language is written in Lua.
+This is the source code of operation System for NodeOne (1st generation). The main programming language is written in Lua. In the future, NodeOne OS Version 2 would be used in python!
 
 ##How to import program to the ESP8266?
 
@@ -16,7 +16,20 @@ ESPlorer: http://esp8266.ru/esplorer/
 
 ## History
 
-Verion 1.1 [4/Nov/2016]
+Version 1.3 [10/Nov/2016]
+* Bug fix: PWM value must be in the range 0-1023
+* Bug fix: PWM interahcnge with digital, digital can be used
+* Showed the NodeOne OS version page in "input wifi" mode only
+* Code consolidation
+
+Version 1.2 [10/Nov/2016]
+* Bug fix: Motor and servo control will be reseted after api called
+* Bug fix: return value of input must be in the range 0-1023
+* Improvement: servo API (0-180 degree) can be used instead of pwm API
+* Changed more stable pulse value of the servo
+* Added welcome page and NodeOne OS version page
+
+Version 1.1 [4/Nov/2016]
 * Bug fix: header of the web browser(IOS)
 * Decrease the time to 25s (direct mode)
 * Changed the way to reset NodeOne
