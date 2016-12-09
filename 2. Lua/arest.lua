@@ -46,10 +46,14 @@ function aREST.handle(conn, request)
 
       if e == nil then
         pin = request_handle
-        pin = tonumber(pin)
+        if mode ~= "wifi" then
+            pin = tonumber(pin)
+        end
       else
         pin = string.sub(request_handle, 0, (e-1))
-        pin = tonumber(pin)
+        if mode ~= "wifi" then
+            pin = tonumber(pin)
+        end
         request_handle = string.sub(request_handle, (e+1))
         e = string.find(request_handle, "/")
         if e == nil then
@@ -94,6 +98,18 @@ function aREST.handle(conn, request)
         end
     end
 
+    if mode == "wifi" then
+        if pin~=nil and string.len(command)>=8 then
+            file.open("config_wifi.lua","w+")
+            --pin = string.gsub(pin,"%20"," ")
+            pin = string.gsub(pin,"+"," ")
+            file.writeline('ssid="'..pin..'"')
+            file.writeline('pwd="'..command..'"')
+            file.close()
+            node.restart()
+        end
+    end
+    
     --------------General---------------------
     if mode == "mode" then
         if command == "o" then
