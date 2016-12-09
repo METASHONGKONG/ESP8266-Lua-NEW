@@ -1,7 +1,7 @@
 --╪стьнд╪Ч temperature, PM2.5, RGB--
 require "si7021"
 require "PM"
-local M = require "pca8695"
+--local M = require "pca8695"
 
 local aREST = {}
 
@@ -250,23 +250,7 @@ function aREST.handle(conn, request)
         answer['message'] = ""..humi	
     end
     
-    if mode == "rgb" then
-        M.init(0,pin,1)
-        if command == "off" then
-            M.set_chan_off(0, 1)
-            M.set_chan_off(1, 1)
-            M.set_chan_off(2, 1)
-            M.set_chan_off(3, 1)
-            answer['message'] = "RGB_OFF"
-        else
-            M.set_chan_percent(0, tonumber(command))
-            M.set_chan_percent(1, tonumber(g))
-            M.set_chan_percent(2,  tonumber(b))
-            M.set_chan_percent(3, tonumber(w))
-            answer['message'] = "OK"
-        end
-            
-    end               
+              
         
     conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. table_to_json(answer) .. "\r\n")
     --conn:send("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\n\r\n" .. table_to_json(answer) .. "\r\n")

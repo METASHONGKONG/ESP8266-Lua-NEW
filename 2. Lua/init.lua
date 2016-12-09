@@ -78,11 +78,10 @@ tmr.alarm(4,5000,0,function()
                 print("please wait")
                 
                 if timeout >= 25 then
-                    --file.remove("config_wifi.lua")
+                    
                     cfg = {}
-                    cfg.ssid = "Metas"..node.chipid()
-                    l = string.len(cfg.ssid)
-                    cfg.ssid = string.sub(cfg.ssid,1,l-1)
+                    cfg.ssid = "Metas"..node.chipid()                    
+                    cfg.ssid = string.sub(cfg.ssid,1,string.len(cfg.ssid)-1)
                     cfg.pwd = "12345678"
                     wifi.ap.config(cfg)  
                     wifi.setmode(wifi.SOFTAP)
@@ -126,11 +125,31 @@ tmr.alarm(4,5000,0,function()
         
     else
         print("run_config: input wifi")
-        require "run_config"
+        --require "run_config"
         display_two_row("NodeOne"," OS Ver1.3")
         tmr.alarm(5,5000,0,function()  display_word("Input Wifi") end)
         tmr.alarm(0,10000,0,function()
+            
+            
+            cfg = {}
+            cfg.ssid = "Metas"..node.chipid()                    
+            cfg.ssid = string.sub(cfg.ssid,1,string.len(cfg.ssid)-1)
+            cfg.pwd = "12345678"
+            wifi.ap.config(cfg)  
+            wifi.setmode(wifi.SOFTAP)
+            
             init_display(cfg.ssid,cfg.pwd,wifi.ap.getip())
+            
+            rest = require "arest"
+            
+            srv=net.createServer(net.TCP) 
+                srv:listen(80,function(conn)
+                conn:on("receive",function(conn,request)
+                    rest.handle(conn, request)
+                  end)
+                  conn:on("sent",function(conn) conn:close() end)
+            end)
+            
         end)  
 
     end
