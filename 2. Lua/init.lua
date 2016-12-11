@@ -70,7 +70,7 @@ rest = require "arest"
 tmr.alarm(4,2000,0,function()
     if pcall(function ()require "config_wifi" end) then
                 
-        display_wifi(ssid,pwd)
+        display_three_row("WIFI",ssid,pwd)
         
         srv = nil
         wifi.setmode(wifi.STATION)
@@ -95,7 +95,7 @@ tmr.alarm(4,2000,0,function()
                     print('IP: ', ip) 
                     len_num = string.len(ip)
                     display_word("  Ready")
-                    tmr.alarm(0,5000,0,function() display_ip(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end) 
+                    tmr.alarm(0,5000,0,function() display_three_row(string.sub(ip,1,10),string.sub(ip,11,len_num),"Connected")	end) 
                 end
                 
             else
@@ -106,7 +106,7 @@ tmr.alarm(4,2000,0,function()
                 
                 display_word(" Time Out")  
                 --display_word("Direct Mode") 
-                tmr.alarm(0,5000,0,function() init_display(apcfg.ssid,apcfg.pwd,wifi.ap.getip())	end) 
+                tmr.alarm(0,5000,0,function() display_three_row(apcfg.ssid,apcfg.pwd,wifi.ap.getip())	end) 
             end
         end)
 
@@ -125,7 +125,7 @@ tmr.alarm(4,2000,0,function()
             
             wifi.ap.config(apcfg)  
             wifi.setmode(wifi.SOFTAP)
-            init_display(apcfg.ssid,apcfg.pwd,wifi.ap.getip())
+            display_three_row(apcfg.ssid,apcfg.pwd,wifi.ap.getip())
             
             srv=net.createServer(net.TCP) 
             srv:listen(80,function(conn)
