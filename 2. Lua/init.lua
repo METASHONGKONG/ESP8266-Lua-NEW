@@ -32,7 +32,7 @@ if analog_value >= 800 then
     local timeout = 0    
     print("Reset mode")
     tmr.alarm(1,500,1,function()                 
-        timeout = timeout+0.5
+        timeout = timeout+1
         analog_value = adc.read(0)
         print("Checking..  "..analog_value)
         
@@ -43,7 +43,7 @@ if analog_value >= 800 then
                 tmr.stop(0)
                 tmr.stop(4)
                 tmr.stop(5)
-                timeout = 4.5
+                timeout = 4
                 file.remove("config_wifi.lua")
                 display_word(" Reset OK")
                 print("Reset OK")                
@@ -110,16 +110,51 @@ tmr.alarm(4,5000,0,function()
                     len_num = string.len(ip)
                     display_word("  Ready")
                     tmr.alarm(0,5000,0,function() display_ip(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
+                    
+                    local ws = websocket.createClient()
+                    value = 0
+                    newValue = 0
+                    ws:on("connection", function(ws)
+                        print('got ws connection')
+                        ws:send('{"action":"input","id":0,"status":"Off","description":"'..value..'"}')
+                        
+                        tmr.alarm(4,1000,1,function ()
+                            newValue = adc.read(0)
+                            if (value ~= newValue) then
+                                value = newValue
+                                ws:send('{"action":"input","id":0,"description":"'..value..'"}')
+                                
+                            end
+                            
+                            
+                        end) 
+                    end)
+                    ws:on("receive", function(_, msg, opcode)
+                      print('got message:', msg, opcode) -- opcode is 1 for text message, 2 for binary
+                        t = cjson.decode(msg)
+                        for k,v in pairs(t) do 
+                            print(k,v) 
+                            if ( k == "status" and v == "On") then
+                                gpio.mode(1, gpio.OUTPUT)
+                                gpio.write(1, gpio.HIGH)
+                                print("on: ","on") 
+                            elseif ( k == "status" and v == "Off") then
+                                gpio.mode(1, gpio.OUTPUT)
+                                gpio.write(1, gpio.LOW)
+                                print("off: ","off") 
+                            end
+                        end
+                    end)
+                    ws:on("close", function(_, status)
+                      print('connection closed', status)
+                      ws = nil -- required to lua gc the websocket client
+                    end)
+
+                    ws:connect('ws://115.160.160.214/websocket/actions')
                                 
                 end
 
-                srv=net.createServer(net.TCP) 
-                srv:listen(80,function(conn)
-                conn:on("receive",function(conn,request)
-                    rest.handle(conn, request)
-                  end)
-                  conn:on("sent",function(conn) conn:close() end)
-                end)
+                
             
             end
         end)
