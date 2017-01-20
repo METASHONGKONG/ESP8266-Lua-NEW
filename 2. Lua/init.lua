@@ -32,7 +32,7 @@ if analog_value >= 800 then
     local timeout = 0    
     print("Reset mode")
     tmr.alarm(1,500,1,function()                 
-        timeout = timeout+0.5
+        timeout = timeout+1
         analog_value = adc.read(0)
         print("Checking..  "..analog_value)
         
@@ -43,7 +43,7 @@ if analog_value >= 800 then
                 tmr.stop(0)
                 tmr.stop(4)
                 tmr.stop(5)
-                timeout = 4.5
+                timeout = 4
                 file.remove("config_wifi.lua")
                 display_word(" Reset OK")
                 print("Reset OK")                
@@ -110,16 +110,56 @@ tmr.alarm(4,5000,0,function()
                     len_num = string.len(ip)
                     display_word("  Ready")
                     tmr.alarm(0,5000,0,function() display_ip(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
+                    
+                    --mqtt
+                    m = mqtt.Client(wifi.sta.getmac(), 10, "user", "password")
+                    m:lwt("/lwt", wifi.sta.getmac(), 0, 0)
+
+                    print ("Attemp to connect") 
+                    -- for TLS: m:connect("192.168.11.118", secure-port, 1)
+                    
+                    m:connect("192.168.1.22", 1883, 0, function(conn) print("connected") end, 
+                                                         function(client, reason) print("failed reason: "..reason) end)
+                                                        
+                    m:on("connect", function(client) print ("connected") end)
+                    
+                    print ("offline")
+                    m:on("offline", function(con) 
+                         print ("reconnecting...") 
+                         print(node.heap())
+                         tmr.alarm(0, 1000, 1, function()
+                              m:connect("192.168.1.22", 1883, 0)
+                         end)
+                    end)
+
+                    print ("message")
+                    -- on publish message receive event
+                    m:on("message", function(client, topic, data) 
+                      print(topic .. ":" ) 
+                      if data ~= nil then
+                        print(data)
+                      end
+                    end)
+
+                    
+
+                    -- Calling subscribe/publish only makes sense once the connection
+                    -- was successfully established. In a real-world application you want
+                    -- move those into the 'connect' callback or make otherwise sure the 
+                    -- connection was established.
+
+                    -- subscribe topic with qos = 0
+                    --m:subscribe("/topic",0, function(client) print("subscribe success") end)
+                    -- publish a message with data = hello, QoS = 0, retain = 0
+                    --m:publish("/topic","hello",0,0, function(client) print("sent") end)
+
+                    --m:close();
+
+                    --ws:connect('ws://115.160.160.214/websocket/actions')
                                 
                 end
 
-                srv=net.createServer(net.TCP) 
-                srv:listen(80,function(conn)
-                conn:on("receive",function(conn,request)
-                    rest.handle(conn, request)
-                  end)
-                  conn:on("sent",function(conn) conn:close() end)
-                end)
+                
             
             end
         end)
