@@ -112,36 +112,59 @@ tmr.alarm(4,5000,0,function()
                     tmr.alarm(0,5000,0,function() display_ip(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
                     
                     --mqtt
-                    m = mqtt.Client(wifi.sta.getmac(), 10, "user", "password")
-                    m:lwt("/lwt", wifi.sta.getmac(), 0, 0)
+                    
+                    --m = mqtt.Client(wifi.sta.getmac(), 10, "user", "password")
+                    --m:lwt("/lwt", wifi.sta.getmac(), 0, 0)
+                    m = mqtt.Client(node.chipid(), 10, "user", "password")
+                    m:lwt("/lwt", node.chipid(), 0, 0)
 
                     print ("Attemp to connect") 
-                    -- for TLS: m:connect("192.168.11.118", secure-port, 1)
+                    m:connect("183.179.95.72", 1883, 0, function(conn) print("connected..") end, 
+                                                        function(client, reason) print("failed reason: "..reason) end)
                     
-                    m:connect("192.168.1.22", 1883, 0, function(conn) print("connected") end, 
-                                                         function(client, reason) print("failed reason: "..reason) end)
-                                                        
-                    m:on("connect", function(client) print ("connected") end)
+                    value = 0
+                    newValue = 0
+                    print ("on connect")
+                    m:on("connect", function(client) 
+                        print ("connected...") 
+                        m:subscribe("/d1",0, function(client) print("subscribe success") end)
+                        m:publish("input/"..node.chipid(),value,0,0, function(client) print(value.." sent") end)
+                        
+                        tmr.alarm(4,1000,1,function ()
+                            newValue = adc.read(0)
+                            if (value ~= newValue) then
+                                value = newValue
+                                m:publish("input/"..node.chipid(),value,0,0, function(client) print(value.." sent") end)
+                            end
+                        end) 
+                    end)
                     
-                    print ("offline")
+                    print ("on offline")
                     m:on("offline", function(con) 
-                         print ("reconnecting...") 
-                         print(node.heap())
-                         tmr.alarm(0, 1000, 1, function()
-                              m:connect("192.168.1.22", 1883, 0)
-                         end)
+                        print ("reconnecting...") 
+                        print(node.heap())
+                        tmr.alarm(0, 1000, 1, function()
+                            m:connect("183.179.95.72", 1883, 0)
+                        end)
                     end)
 
-                    print ("message")
+                    print ("on message")
                     -- on publish message receive event
                     m:on("message", function(client, topic, data) 
-                      print(topic .. ":" ) 
-                      if data ~= nil then
-                        print(data)
-                      end
+                        print(topic .. ":" ) 
+                        if data ~= nil then
+                            print(data)
+                        end
+                        
+                        if data == "1" then
+                            gpio.mode(1, gpio.OUTPUT)
+                            gpio.write(1,gpio.HIGH);
+                        else
+                            gpio.mode(1, gpio.OUTPUT)
+                            gpio.write(1,gpio.LOW);
+                        end
+                        
                     end)
-
-                    
 
                     -- Calling subscribe/publish only makes sense once the connection
                     -- was successfully established. In a real-world application you want
