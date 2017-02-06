@@ -109,7 +109,7 @@ tmr.alarm(4,5000,0,function()
                 else
                     len_num = string.len(ip)
                     display_word("  Ready")
-                    tmr.alarm(0,5000,0,function() display_ip(ssid,string.sub(ip,1,10),string.sub(ip,11,len_num))	end)  
+                    tmr.alarm(0,5000,0,function() display_ip(ssid,"ID:"..node.chipid(),"Wifi")	end)  
                     
                     require "mqtt_client"
                                 
