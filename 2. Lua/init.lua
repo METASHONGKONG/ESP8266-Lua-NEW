@@ -129,7 +129,7 @@ tmr.alarm(4,5000,0,function()
                     print ("on connect")
                     m:on("connect", function(client) 
                         print ("connected...") 
-                        m:subscribe("/d1",0, function(client) print("subscribe success") end)
+                        m:subscribe("output/"..node.chipid(),0, function(client) print("subscribe success") end)
                         --m:publish("input/"..node.chipid(),value,0,0, function(client) print(value.." sent") end)
                         
                         tmr.alarm(4,1000,1,function ()
@@ -164,18 +164,42 @@ tmr.alarm(4,5000,0,function()
                     print ("on message")
                     -- on publish message receive event
                     m:on("message", function(client, topic, data) 
-                        print(topic .. ":" ) 
+                        print("Topic: "..topic ) 
                         if data ~= nil then
-                            print(data)
+                            print("Data received: "..data)
+                            
+                            t = cjson.decode(data)
+                            for k,v in pairs(t) do 
+                                    if( k == "mode") then
+                                        mode = v
+                                    elseif( k == "pin") then
+                                        pin = tonumber(v)
+                                    elseif ( k == "intensity") then
+                                        intensity = tonumber(v)
+                                    end
+                            end
+                            if (mode == "pwm") then
+                                if intensity <= 0 then
+                                    intensity = 0
+                                elseif  intensity >= 1023 then
+                                    intensity=1023
+                                end
+                                pwm.setup(pin,50,intensity)	
+                                pwm.start(pin)
+                            elseif (mode == "digital") then
+                                if (intensity == 0) then
+                                    pwm.close(pin)
+                                    gpio.mode(pin, gpio.OUTPUT)
+                                    gpio.write(pin, gpio.LOW)
+                                else
+                                    pwm.close(pin)
+                                    gpio.mode(pin, gpio.OUTPUT)
+                                    gpio.write(pin, gpio.HIGH)
+                                end
+                            end
+                            
                         end
-                        
-                        if data == "1" then
-                            gpio.mode(1, gpio.OUTPUT)
-                            gpio.write(1,gpio.HIGH);
-                        else
-                            gpio.mode(1, gpio.OUTPUT)
-                            gpio.write(1,gpio.LOW);
-                        end
+
                         
                     end)
 

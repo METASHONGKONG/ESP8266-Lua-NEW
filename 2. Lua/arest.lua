@@ -187,37 +187,7 @@ function aREST.handle(conn, request)
         end
     end
     
-  if mode == "forward" then 
-        pwm.setduty(M2_CW,1000) 
-        pwm.setduty(M2_ACW,0)
-        pwm.setduty(M1_CW,0)
-        pwm.setduty(M1_ACW,1000) 
-        answer['message'] = "car forward now... "   
-      elseif mode == "backward" then
-        pwm.setduty(M2_CW,0) 
-        pwm.setduty(M2_ACW,1000)
-        pwm.setduty(M1_CW,1000)
-        pwm.setduty(M1_ACW,0) 
-        answer['message'] = "car backward now... " 
-      elseif  mode == "left" then
-        pwm.setduty(M2_CW,1000) 
-        pwm.setduty(M2_ACW,0)
-        pwm.setduty(M1_CW,1000)
-        pwm.setduty(M1_ACW,0) 
-        answer['message'] = "car left now... " 
-      elseif mode == "right" then
-        pwm.setduty(M2_CW,0) 
-        pwm.setduty(M2_ACW,1000)
-        pwm.setduty(M1_CW,0)
-        pwm.setduty(M1_ACW,1000) 
-        answer['message'] = "car right now... " 
-      elseif mode == "stop" then
-        pwm.setduty(M2_CW,200) 
-        pwm.setduty(M2_ACW,200)
-        pwm.setduty(M1_CW,200)
-        pwm.setduty(M1_ACW,200) 
-        answer['message'] = "car stop now... " 
-    end	
+
 
     if mode == "PM" then 
         local pm_value = read_PM()
@@ -259,14 +229,15 @@ end
 function table_to_json(json_table)
 
 local json = ""
---json = json .. "{"
+json = json .. "{"
 
 for key,value in pairs(json_table) do
-  json = json .. value  --json = json .. "\"" .. key .. "\": \"" .. value .. "\", "
+  --json = json .. value  
+  json = json .. "\"" .. key .. "\": \"" .. value .. "\", "
 end
 
---json = string.sub(json, 0, -3)
---json = json .. "}"
+json = string.sub(json, 0, -3)
+json = json .. "}"
 
 return json
 
