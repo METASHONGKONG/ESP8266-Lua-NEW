@@ -119,22 +119,35 @@ tmr.alarm(4,5000,0,function()
                     m:lwt("/lwt", node.chipid(), 0, 0)
 
                     print ("Attemp to connect") 
-                    m:connect("183.179.95.72", 1883, 0, function(conn) print("connected..") end, 
+                    m:connect("115.160.160.214", 1883, 0, function(conn) print("connected..") end, 
                                                         function(client, reason) print("failed reason: "..reason) end)
                     
-                    value = 0
+                    array = {a0 = 0,a1 = 0,temp=0,humi=0}
+                    
+                    --value = 0
                     newValue = 0
                     print ("on connect")
                     m:on("connect", function(client) 
                         print ("connected...") 
                         m:subscribe("/d1",0, function(client) print("subscribe success") end)
-                        m:publish("input/"..node.chipid(),value,0,0, function(client) print(value.." sent") end)
+                        --m:publish("input/"..node.chipid(),value,0,0, function(client) print(value.." sent") end)
                         
                         tmr.alarm(4,1000,1,function ()
-                            newValue = adc.read(0)
-                            if (value ~= newValue) then
-                                value = newValue
-                                m:publish("input/"..node.chipid(),value,0,0, function(client) print(value.." sent") end)
+                            print ("----Checking----")
+                            local trigger = false
+                            for k,v in pairs(array)do
+                                if k == "a0" then gpio.write(0,gpio.HIGH) newValue = adc.read(0) elseif k == "a1" then gpio.write(0,gpio.LOW) newValue = adc.read(0)
+                                elseif k == "temp" then newValue = read_temp() elseif k == "humi" then newValue = read_humi() end
+                                
+                                --if (v ~= newValue) then
+                                if (math.abs(v - newValue) > 5) then
+                                    array[k] = newValue
+                                    --for k,v in pairs(array) do print(k,v) end
+                                    trigger = true                                    
+                                end
+                            end                                                        
+                            if trigger then
+                                m:publish("input/"..node.chipid(),table_to_json(array),0,0, function(client) print(table_to_json(array).." sent") end)
                             end
                         end) 
                     end)
@@ -144,7 +157,7 @@ tmr.alarm(4,5000,0,function()
                         print ("reconnecting...") 
                         print(node.heap())
                         tmr.alarm(0, 1000, 1, function()
-                            m:connect("183.179.95.72", 1883, 0)
+                            m:connect("115.160.160.214", 1883, 0)
                         end)
                     end)
 
@@ -166,15 +179,6 @@ tmr.alarm(4,5000,0,function()
                         
                     end)
 
-                    -- Calling subscribe/publish only makes sense once the connection
-                    -- was successfully established. In a real-world application you want
-                    -- move those into the 'connect' callback or make otherwise sure the 
-                    -- connection was established.
-
-                    -- subscribe topic with qos = 0
-                    --m:subscribe("/topic",0, function(client) print("subscribe success") end)
-                    -- publish a message with data = hello, QoS = 0, retain = 0
-                    --m:publish("/topic","hello",0,0, function(client) print("sent") end)
 
                     --m:close();
 
