@@ -59,8 +59,13 @@ m:on("message", function(client, topic, data)
                     pin = tonumber(v)
                 elseif ( k == "intensity") then
                     intensity = tonumber(v)
+                elseif ( k == "no") then -- For motor
+                    no = tonumber(v)
+                elseif ( k == "direction") then -- For motor
+                    direction = v
                 end
         end
+        
         if (mode == "pwm") then
             if intensity <= 0 then
                 intensity = 0
@@ -87,6 +92,30 @@ m:on("message", function(client, topic, data)
             end
             pwm.setup(pin,50,math.floor(33+((128-33)*intensity/180)))
             pwm.start(pin)
+        elseif (mode == "motor") then
+            if intensity <= 0 then
+                intensity = 0
+            elseif  intensity >= 1023 then
+                intensity=1023
+            end
+            
+            if no == 1 then 
+                if direction == "cw" then 
+                    pwm.setduty(2,intensity) 
+                    pwm.setduty(3,0)  
+                elseif direction == "acw" then
+                    pwm.setduty(2,0) 
+                    pwm.setduty(3,intensity)
+                end 
+            elseif no == 2 then
+                if direction == "cw" then 
+                    pwm.setduty(4,0) 
+                    pwm.setduty(5,intensity)  
+                elseif direction == "acw" then
+                    pwm.setduty(4,intensity) 
+                    pwm.setduty(5,0)
+                end 
+            end
         end
         
     end
