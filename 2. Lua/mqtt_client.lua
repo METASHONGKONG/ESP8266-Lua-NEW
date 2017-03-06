@@ -79,6 +79,14 @@ m:on("message", function(client, topic, data)
                 gpio.mode(pin, gpio.OUTPUT)
                 gpio.write(pin, gpio.HIGH)
             end
+        elseif (mode == "servo") then
+            if intensity <= 0 then
+                intensity = 0
+            elseif  intensity >= 180 then
+                intensity=180
+            end
+            pwm.setup(pin,50,math.floor(33+((128-33)*intensity/180)))
+            pwm.start(pin)
         end
         
     end
