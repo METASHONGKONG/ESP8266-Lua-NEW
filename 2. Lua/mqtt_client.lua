@@ -2,7 +2,7 @@ m = mqtt.Client(node.chipid(), 10, "user", "password")
 m:lwt("/lwt", node.chipid(), 0, 0)
 
 print ("Attemp to connect") 
-m:connect("115.160.160.214", 1883, 0, function(conn) print("connected..") end, 
+m:connect("54.202.6.250", 1883, 0, function(conn) print("connected..") end, 
                                     function(client, reason) print("failed reason: "..reason) end)
 
 array = {a0 = 0,a1 = 0,temp=0,humi=0}
@@ -40,7 +40,7 @@ m:on("offline", function(con)
     print ("reconnecting...") 
     print(node.heap())
     tmr.alarm(0, 1000, 1, function()
-        m:connect("115.160.160.214", 1883, 0)
+        m:connect("54.202.6.250", 1883, 0)
     end)
 end)
 
