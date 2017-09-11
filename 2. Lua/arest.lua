@@ -1,7 +1,9 @@
 --╪стьнд╪Ч temperature, PM2.5, RGB--
 require "si7021"
-require "PM"
-local M = require "pca8695"
+
+dofile("PwmSvr_PCA9685.lua")
+PwmSvr.begin()
+PwmSvr.setPWMFreq(60)
 
 local aREST = {}
 
@@ -218,11 +220,6 @@ function aREST.handle(conn, request)
         pwm.setduty(M1_ACW,200) 
         answer['message'] = "car stop now... " 
     end	
-
-    if mode == "PM" then 
-        local pm_value = read_PM()
-        answer['message'] = ""..pm_value	
-    end
                    
     if mode == "temperature" then
         local temp = read_temp()
@@ -234,22 +231,17 @@ function aREST.handle(conn, request)
         answer['message'] = ""..humi	
     end
     
-    if mode == "rgb" then
-        M.init(0,pin,1)
-        if command == "off" then
-            M.set_chan_off(0, 1)
-            M.set_chan_off(1, 1)
-            M.set_chan_off(2, 1)
-            M.set_chan_off(3, 1)
-            answer['message'] = "RGB_OFF"
-        else
-            M.set_chan_percent(0, tonumber(command))
-            M.set_chan_percent(1, tonumber(g))
-            M.set_chan_percent(2,  tonumber(b))
-            M.set_chan_percent(3, tonumber(w))
-            answer['message'] = "OK"
+    if mode == "servo2" then
+	
+		num = tonumber(command)
+        if num <= 0 then
+            num = 0
+        elseif  num >= 180 then
+            num=180
         end
-            
+        
+        PwmSvr.setPWM(pin, 0, math.floor(130+((550-130)*num/180)))
+        answer['message'] = ""..pin..":"..num    
     end               
         
     conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. table_to_json(answer) .. "\r\n")
