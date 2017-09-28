@@ -1,7 +1,7 @@
 --╪стьнд╪Ч temperature, PM2.5, RGB--
 require "si7021"
 require "PM"
-local M = require "pca8695"
+--local M = require "pca8695"
 
 local aREST = {}
 
@@ -46,10 +46,14 @@ function aREST.handle(conn, request)
 
       if e == nil then
         pin = request_handle
-        pin = tonumber(pin)
+        if mode ~= "wifi" then
+            pin = tonumber(pin)
+        end
       else
         pin = string.sub(request_handle, 0, (e-1))
-        pin = tonumber(pin)
+        if mode ~= "wifi" then
+            pin = tonumber(pin)
+        end
         request_handle = string.sub(request_handle, (e+1))
         e = string.find(request_handle, "/")
         if e == nil then
@@ -94,6 +98,18 @@ function aREST.handle(conn, request)
         end
     end
 
+    if mode == "wifi" then
+        if pin~=nil and string.len(command)>=8 then
+            file.open("config_wifi.lua","w+")
+            --pin = string.gsub(pin,"%20"," ")
+            pin = string.gsub(pin,"+"," ")
+            file.writeline('ssid="'..pin..'"')
+            file.writeline('pwd="'..command..'"')
+            file.close()
+            node.restart()
+        end
+    end
+    
     --------------General---------------------
     if mode == "mode" then
         if command == "o" then
@@ -234,23 +250,7 @@ function aREST.handle(conn, request)
         answer['message'] = ""..humi	
     end
     
-    if mode == "rgb" then
-        M.init(0,pin,1)
-        if command == "off" then
-            M.set_chan_off(0, 1)
-            M.set_chan_off(1, 1)
-            M.set_chan_off(2, 1)
-            M.set_chan_off(3, 1)
-            answer['message'] = "RGB_OFF"
-        else
-            M.set_chan_percent(0, tonumber(command))
-            M.set_chan_percent(1, tonumber(g))
-            M.set_chan_percent(2,  tonumber(b))
-            M.set_chan_percent(3, tonumber(w))
-            answer['message'] = "OK"
-        end
-            
-    end               
+              
         
     conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. table_to_json(answer) .. "\r\n")
     --conn:send("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\n\r\n" .. table_to_json(answer) .. "\r\n")
