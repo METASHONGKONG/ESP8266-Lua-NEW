@@ -2,58 +2,58 @@ require "oled"
 init_set()
 
 --Initialize all pins--
-function Initialization()
-	gpio.mode(1,gpio.OUTPUT);
-	gpio.write(1,gpio.LOW);
-	gpio.mode(8,gpio.OUTPUT);
-	gpio.write(8,gpio.LOW);
-	gpio.mode(0,gpio.OUTPUT);
-	gpio.write(0,gpio.HIGH);
-	
-	local M2_CW = 5 --右脚正转
-	local M2_ACW = 4 --右脚反转
-	local M1_CW = 2 --左脚正转
-	local M1_ACW = 3 --左脚反转
 
-	pwm.setup(M2_CW,50,70)
-	pwm.setup(M2_ACW,50,70)
-	pwm.setup(M1_CW,50,70) 
-	pwm.setup(M1_ACW,50,70) 
+gpio.mode(1,gpio.OUTPUT);
+gpio.write(1,gpio.LOW);
+gpio.mode(8,gpio.OUTPUT);
+gpio.write(8,gpio.LOW);
+gpio.mode(0,gpio.OUTPUT)
+gpio.write(0,gpio.HIGH)
 
-	pwm.start(M2_CW)
-	pwm.start(M2_ACW)
-	pwm.start(M1_CW)
-	pwm.start(M1_ACW)
-end
+local M2_CW = 5 --右脚正转
+local M2_ACW = 4 --右脚反转
+local M1_CW = 2 --左脚正转
+local M1_ACW = 3 --左脚反转
 
+pwm.setup(M2_CW,50,70)
+pwm.setup(M2_ACW,50,70)
+pwm.setup(M1_CW,50,70) 
+pwm.setup(M1_ACW,50,70) 
+
+pwm.start(M2_CW)
+pwm.start(M2_ACW)
+pwm.start(M1_CW)
+pwm.start(M1_ACW)
     
 --Reset network wifi--
-gpio.mode(3,gpio.OUTPUT)
 
-local timeout = 0        
-tmr.alarm(1,500,1,function()                 
-	timeout = timeout+0.5
-	flash_value = gpio.read(3)
-	print("Reset checking..  "..flash_value)
-	
-	if timeout == 5 then
-		tmr.stop(1)
-	else
-		if flash_value == 0 then
-			tmr.stop(0)
-			tmr.stop(4)
-			tmr.stop(5)
-			timeout = 4.5
-			file.remove("config_wifi.lua")
-			display_word(" Reset OK")
-			print("Reset OK")                
-			tmr.alarm(2,4000,0,function() display_word("Restart...")    end)
-			tmr.alarm(3,5000,0,function() node.restart()    end)                
-		end
-	end
-end)  
-
-print("ADC Checking: "..adc.read(0))
+analog_value = adc.read(0) 
+if analog_value >= 800 then
+    local timeout = 0    
+    print("Reset mode")
+    tmr.alarm(1,500,1,function()                 
+        timeout = timeout+0.5
+        analog_value = adc.read(0)
+        print("Checking..  "..analog_value)
+        
+        if timeout == 5 then
+            tmr.stop(1)
+        else
+            if analog_value < 100 then
+                tmr.stop(0)
+                tmr.stop(4)
+                tmr.stop(5)
+                timeout = 4.5
+                file.remove("config_wifi.lua")
+                display_word(" Reset OK")
+                print("Reset OK")                
+                tmr.alarm(2,4000,0,function() display_word("Restart...")	end)
+                tmr.alarm(3,5000,0,function() node.restart()	end)                
+            end
+        end
+    end)  
+end
+print(analog_value)
 
 --Welcome page with OS version--
 display_word("  Welcome")
@@ -62,9 +62,7 @@ display_word("  Welcome")
 --Input wifi/connect wifi--
 tmr.alarm(4,5000,0,function()
     if pcall(function ()require "config_wifi" end) then
-		
-		Initialization()
-		
+            
         srv = nil
         wifi.setmode(wifi.STATION)
         wifi.sta.config(ssid,pwd)
@@ -137,4 +135,3 @@ tmr.alarm(4,5000,0,function()
 
     end
 end)  
-
