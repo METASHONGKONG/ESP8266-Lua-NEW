@@ -1,6 +1,5 @@
 --╪стьнд╪Ч temperature, PM2.5, RGB--
 require "si7021"
-require "PM"
 --local M = require "pca8695"
 
 local aREST = {}
@@ -234,11 +233,6 @@ function aREST.handle(conn, request)
         pwm.setduty(M1_ACW,200) 
         answer['message'] = "car stop now... " 
     end	
-
-    if mode == "PM" then 
-        local pm_value = read_PM()
-        answer['message'] = ""..pm_value	
-    end
                    
     if mode == "temperature" then
         local temp = read_temp()
@@ -249,24 +243,17 @@ function aREST.handle(conn, request)
         local humi = read_humi()
         answer['message'] = ""..humi	
     end
-    
-              
         
     conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. table_to_json(answer) .. "\r\n")
-    --conn:send("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nConnection: close\r\n\r\n" .. table_to_json(answer) .. "\r\n")
 end
 
 function table_to_json(json_table)
 
 local json = ""
---json = json .. "{"
 
 for key,value in pairs(json_table) do
   json = json .. value  --json = json .. "\"" .. key .. "\": \"" .. value .. "\", "
 end
-
---json = string.sub(json, 0, -3)
---json = json .. "}"
 
 return json
 
