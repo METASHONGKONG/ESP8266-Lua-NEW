@@ -41,14 +41,14 @@ tmr.alarm(1,500,1,function()
 	flash_value = gpio.read(3)
 	print("Reset checking..  "..flash_value)
 	
-	if timeout == 5 then
+	if timeout == 4 then
 		tmr.stop(1)
 	else
 		if flash_value == 0 then
 			tmr.stop(0)
 			tmr.stop(4)
 			tmr.stop(5)
-			timeout = 4.5
+			timeout = 3.5
 			file.remove("config_wifi.lua")
 			display_word(" Reset OK")
 			print("Reset OK")                
@@ -70,8 +70,7 @@ rest = require "arest"
 --Input wifi/connect wifi--
 tmr.alarm(4,2000,0,function()
     if pcall(function ()require "config_wifi" end) then
-        
-		Initialization()        
+           
         display_three_row("WIFI",ssid,pwd)
         
         srv = nil
@@ -93,6 +92,7 @@ tmr.alarm(4,2000,0,function()
                         display_word("Connecting..") 
                     end
                 else
+					Initialization()  
                     tmr.stop(0)
                     print('IP: ', ip) 
                     len_num = string.len(ip)
@@ -108,7 +108,7 @@ tmr.alarm(4,2000,0,function()
                 
                 display_word(" Time Out")  
                 --display_word("Direct Mode") 
-                tmr.alarm(0,5000,0,function() display_three_row(apcfg.ssid,apcfg.pwd,wifi.ap.getip())	end) 
+                tmr.alarm(0,5000,0,function() display_three_row(apcfg.ssid,apcfg.pwd,"192.168.4.1")	end) 
             end
         end)
 
@@ -124,10 +124,10 @@ tmr.alarm(4,2000,0,function()
         display_two_row("NodeOne"," OS Ver1.3")
         tmr.alarm(5,5000,0,function()  display_word("Input Wifi") end)
         tmr.alarm(0,10000,0,function()
-            
+            Initialization()
             wifi.ap.config(apcfg)  
             wifi.setmode(wifi.SOFTAP)
-            display_three_row(apcfg.ssid,apcfg.pwd,wifi.ap.getip())
+            display_three_row(apcfg.ssid,apcfg.pwd,"192.168.4.1")
             
             srv=net.createServer(net.TCP) 
             srv:listen(80,function(conn)
