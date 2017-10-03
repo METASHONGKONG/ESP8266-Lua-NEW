@@ -202,36 +202,16 @@ function aREST.handle(conn, request)
         end
     end
     
-  if mode == "forward" then 
-        pwm.setduty(M2_CW,1000) 
-        pwm.setduty(M2_ACW,0)
-        pwm.setduty(M1_CW,0)
-        pwm.setduty(M1_ACW,1000) 
-        answer['message'] = "car forward now... "   
-      elseif mode == "backward" then
-        pwm.setduty(M2_CW,0) 
-        pwm.setduty(M2_ACW,1000)
-        pwm.setduty(M1_CW,1000)
-        pwm.setduty(M1_ACW,0) 
-        answer['message'] = "car backward now... " 
-      elseif  mode == "left" then
-        pwm.setduty(M2_CW,1000) 
-        pwm.setduty(M2_ACW,0)
-        pwm.setduty(M1_CW,1000)
-        pwm.setduty(M1_ACW,0) 
-        answer['message'] = "car left now... " 
-      elseif mode == "right" then
-        pwm.setduty(M2_CW,0) 
-        pwm.setduty(M2_ACW,1000)
-        pwm.setduty(M1_CW,0)
-        pwm.setduty(M1_ACW,1000) 
-        answer['message'] = "car right now... " 
-      elseif mode == "stop" then
-        pwm.setduty(M2_CW,200) 
-        pwm.setduty(M2_ACW,200)
-        pwm.setduty(M1_CW,200)
-        pwm.setduty(M1_ACW,200) 
-        answer['message'] = "car stop now... " 
+	if mode == "forward" then 
+		answer['message'] = motor_control(pin,0,0,pin,"forward",pin)
+	elseif mode == "backward" then
+		answer['message'] = motor_control(0,pin,pin,0,"backward",pin)
+	elseif  mode == "left" then
+		answer['message'] = motor_control(pin,0,pin,0,"left",pin)
+	elseif mode == "right" then
+		answer['message'] = motor_control(pin,0,0,pin,"right",pin)
+	elseif mode == "stop" then
+		answer['message'] = motor_control(200,200,200,200,"stop",pin)
     end	
                    
     if mode == "temperature" then
@@ -244,19 +224,17 @@ function aREST.handle(conn, request)
         answer['message'] = ""..humi	
     end
         
-    conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. table_to_json(answer) .. "\r\n")
+    conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. answer .. "\r\n")
 end
 
-function table_to_json(json_table)
+function motor_control(M2_CW_speed,M2_ACW_speed,M1_CW_speed,M1_ACW_speed,direction,speed)
 
-local json = ""
-
-for key,value in pairs(json_table) do
-  json = json .. value  --json = json .. "\"" .. key .. "\": \"" .. value .. "\", "
-end
-
-return json
-
+	pwm.setduty(5,M2_CW_speed) 
+	pwm.setduty(4,M2_ACW_speed)
+	pwm.setduty(2,M1_CW_speed)
+	pwm.setduty(3,M1_ACW_speed) 
+	return "car "..direction.." "..speed.." now... "
+	
 end
 
 return aREST
