@@ -6,154 +6,89 @@ local aREST = {}
 
 function aREST.handle(conn, request)
 
-    -- Variables
-    local pin 
-    local command
-    local value
-    local answer = {}
-    local mode
-    local variables = {}
-    local g
-    local b
-    local w
-
     --usb下载口朝向车头--
     local M2_CW = 5 --右脚正转
     local M2_ACW = 4 --右脚反转
     local M1_CW = 2 --左脚正转
     local M1_ACW = 3 --左脚反转
-
-    -- Find start
+	
+    -- New request, Find start/end
     local e = string.find(request, "/")
     local request_handle = string.sub(request, e + 1)
-
-    -- Cut end
     e = string.find(request_handle, "HTTP")
     request_handle = string.sub(request_handle, 0, (e-2))
-
-    -- Find mode
-    e = string.find(request_handle, "/")
-
-    if e == nil then
-      mode = request_handle
-    else
-      mode = string.sub(request_handle, 0, (e-1))
-      
-      -- Find pin & command
-      request_handle = string.sub(request_handle, (e+1))
-      e = string.find(request_handle, "/")
-
-      if e == nil then
-        pin = request_handle
-        if mode ~= "wifi" then
-            pin = tonumber(pin)
-        end
-      else
-        pin = string.sub(request_handle, 0, (e-1))
-        if mode ~= "wifi" then
-            pin = tonumber(pin)
-        end
-        request_handle = string.sub(request_handle, (e+1))
-        e = string.find(request_handle, "/")
-        if e == nil then
-            command  = request_handle
-        else
-            command = string.sub(request_handle, 0, (e-1))
-            --Find RGB--
-            request_handle = string.sub(request_handle, (e+1))
-            
-            e = string.find(request_handle, "/")
-            if e == nil then
-                g = request_handle
-            else
-                g=string.sub(request_handle, 0, (e-1))
-                request_handle = string.sub(request_handle, (e+1))
-                e = string.find(request_handle,"/")
-                if e == nil then
-                    b = request_handle
-                else
-                    b=string.sub(request_handle,0,(e-1))
-                    request_handle = string.sub(request_handle,(e+1))
-                    w = request_handle
-                end
-            end
-        end        
-      end
-    end
-
-    -- Debug output, pattern: http://IP/mode/pin/command/g/b/w
     print('-----------------------')
-    print('Mode: ', mode)
-    print('Pin: ', pin)
-    print('Command: ', command)
-    print('g: ', g)
-    print('b: ', b)
-    print('w: ', w)
+    print('Request: ', request_handle)
+	
+	-- Pattern: http://IP/mode/value[2]/value[3]/value[4]
+	local value={} ; i=1
+	for str in string.gmatch(request_handle, "([^//]+)") do
+			value[i] = str
+			i = i + 1
+	end
+	
+	local mode = value[1]
+	local message
 
-    -- Apply command
-    if pin == nil then
-        for key,value in pairs(variables) do
-            if key == mode then answer[key] = value end
-        end
-    end
-
+	--------------Wifi---------------------
     if mode == "wifi" then
-        if pin~=nil and string.len(command)>=8 then
+        if value[2]~=nil and string.len(value[3])>=8 then
             file.open("config_wifi.lua","w+")
-            --pin = string.gsub(pin,"%20"," ")
-            pin = string.gsub(pin,"+"," ")
-            file.writeline('ssid="'..pin..'"')
-            file.writeline('pwd="'..command..'"')
+            value[2] = string.gsub(value[2],"+"," ")
+            file.writeline('ssid="'..value[2]..'"')
+            file.writeline('pwd="'..value[3]..'"')
             file.close()
             node.restart()
         end
+	else
+		value[2] = tonumber(value[2])
     end
     
     --------------General---------------------
     if mode == "mode" then
-        if command == "o" then
-            gpio.mode(pin, gpio.OUTPUT)
-            answer['message'] = "" .. pin .. " set to output" 
-        elseif command == "i" then
-            gpio.mode(pin, gpio.INPUT)
-            answer['message'] = "" .. pin .. " set to input"
-        elseif command == "p" then
-            pwm.setup(pin, 50, 0);
-            pwm.start(pin);
-            answer["message"] = "Pin D" .. pin .. " set to PWM";
+        if value[3] == "o" then
+            gpio.mode(value[2], gpio.OUTPUT)
+            message = "" .. value[2] .. " set to output" 
+        elseif value[3] == "i" then
+            gpio.mode(value[2], gpio.INPUT)
+            message = "" .. value[2] .. " set to input"
+        elseif value[3] == "p" then
+            pwm.setup(value[2], 50, 0);
+            pwm.start(value[2]);
+            answer["message"] = "Pin D" .. value[2] .. " set to PWM";
         end 
     end
 
     if mode == "digital" then
-        if command == "0" then 
-            gpio.mode(pin, gpio.OUTPUT)
-            gpio.write(pin, gpio.LOW)
-            answer['message'] = "" .. pin .. " set to 0"   
-        elseif command == "1" then
-            gpio.mode(pin, gpio.OUTPUT)
-            gpio.write(pin, gpio.HIGH)
-            answer['message'] = "" .. pin .. " set to 1" 
-        elseif command == "r" then
-            value = gpio.read(pin)
+        if value[3] == "0" then 
+            gpio.mode(value[2], gpio.OUTPUT)
+            gpio.write(value[2], gpio.LOW)
+            message = "" .. value[2] .. " set to 0"   
+        elseif value[3] == "1" then
+            gpio.mode(value[2], gpio.OUTPUT)
+            gpio.write(value[2], gpio.HIGH)
+            message = "" .. value[2] .. " set to 1" 
+        elseif value[3] == "r" then
+            value = gpio.read(value[2])
             answer['return_value'] = value
         end
     end
 
     if mode == "pwm" or mode == "output" then
-		num	= tonumber(command)
+		num	= tonumber(value[3])
         if num <= 0 then
             num = 0
         elseif  num >= 1023 then
             num=1023
         end
-		pwm.setup(pin,50,num)	
-		pwm.start(pin)
-		answer['message'] = ""..pin..":"..num	
+		pwm.setup(value[2],50,num)	
+		pwm.start(value[2])
+		message = ""..value[2]..":"..num	
 	end
     
     if mode == "analog" or mode == "input" then
         gpio.mode(0,gpio.OUTPUT)
-        if pin == 0 then
+        if value[2] == 0 then
             gpio.write(0,gpio.HIGH)
         else
             gpio.write(0,gpio.LOW)
@@ -162,69 +97,69 @@ function aREST.handle(conn, request)
         if value == 1024 then
             value = 1023
         end
-        answer['return_value'] = value
+        message = value
     end
       
     --------------Function port---------------------
     if mode == "servo" then
-        num = tonumber(command)
+        num = tonumber(value[3])
         if num <= 0 then
             num = 0
         elseif  num >= 180 then
             num=180
         end
-        pwm.setup(pin,50,math.floor(33+((128-33)*num/180)))
-        pwm.start(pin)
-        answer['message'] = ""..pin..":"..num
+        pwm.setup(value[2],50,math.floor(33+((128-33)*num/180)))
+        pwm.start(value[2])
+        message = ""..value[2]..":"..num
     end
     
     if mode == "motor" then
-        if pin == 1 then 
-            if command == "cw" then 
+        if value[2] == 1 then 
+            if value[3] == "cw" then 
                 pwm.setduty(M1_CW,g) 
                 pwm.setduty(M1_ACW,0)
-                answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command   
-            elseif command == "acw" then
+                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]   
+            elseif value[3] == "acw" then
                 pwm.setduty(M1_CW,0) 
                 pwm.setduty(M1_ACW,g)
-                answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command  
+                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]  
             end 
-        elseif pin == 2 then
-            if command == "cw" then 
+        elseif value[2] == 2 then
+            if value[3] == "cw" then 
                 pwm.setduty(M2_ACW,0) 
                 pwm.setduty(M2_CW,g)
-                answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command   
-            elseif command == "acw" then
+                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]   
+            elseif value[3] == "acw" then
                 pwm.setduty(M2_ACW,g) 
                 pwm.setduty(M2_CW,0)
-                answer['message'] = "Motor " .. pin .. " set to " .. g .. " in " .. command  
+                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]  
             end 
         end
     end
     
 	if mode == "forward" then 
-		answer['message'] = motor_control(pin,0,0,pin,"forward",pin)
+		message = motor_control(value[2],0,0,value[2],"forward",value[2])
 	elseif mode == "backward" then
-		answer['message'] = motor_control(0,pin,pin,0,"backward",pin)
+		message = motor_control(0,value[2],value[2],0,"backward",value[2])
 	elseif  mode == "left" then
-		answer['message'] = motor_control(pin,0,pin,0,"left",pin)
+		message = motor_control(value[2],0,value[2],0,"left",value[2])
 	elseif mode == "right" then
-		answer['message'] = motor_control(pin,0,0,pin,"right",pin)
+		message = motor_control(value[2],0,0,value[2],"right",value[2])
 	elseif mode == "stop" then
-		answer['message'] = motor_control(200,200,200,200,"stop",pin)
+		message = motor_control(200,200,200,200,"stop",value[2])
     end	
                    
     if mode == "temperature" then
         local temp = read_temp()
-        answer['message'] = ""..temp	
+        message = ""..temp	
     end
     
     if mode == "humidity" then
         local humi = read_humi()
-        answer['message'] = ""..humi	
+        message = ""..humi	
     end
         
-    conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. answer .. "\r\n")
+    conn:send("HTTP/1.1 200 OK\r\nContent-type: text/html\r\nAccess-Control-Allow-Origin:* \r\n\r\n" .. message .. "\r\n")
 end
 
 function motor_control(M2_CW_speed,M2_ACW_speed,M1_CW_speed,M1_ACW_speed,direction,speed)
