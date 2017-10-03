@@ -55,15 +55,11 @@ end)
 
 print("ADC Checking: "..adc.read(0))
 
---Show welcome page 2s--
+--Show welcome page 5s--
 display_word("  Welcome")
 
-rest = require "arest"
-
-
-
 --Input wifi/connect wifi--
-tmr.alarm(4,2000,0,function()
+tmr.alarm(4,5000,0,function()
     if pcall(function ()require "config_wifi" end) then
            
         display_three_row("WIFI",ssid,pwd)
@@ -106,7 +102,8 @@ tmr.alarm(4,2000,0,function()
                 tmr.alarm(0,5000,0,function() display_three_row(apcfg.ssid,apcfg.pwd,"192.168.4.1")	end) 
             end
         end)
-
+		
+		rest = require "arest"
         srv=net.createServer(net.TCP) 
         srv:listen(80,function(conn)
             conn:on("receive",function(conn,request) rest.handle(conn, request) end)
@@ -124,6 +121,7 @@ tmr.alarm(4,2000,0,function()
             wifi.setmode(wifi.SOFTAP)
             display_three_row(apcfg.ssid,apcfg.pwd,"192.168.4.1")
             
+			rest = require "arest"
             srv=net.createServer(net.TCP) 
             srv:listen(80,function(conn)
                 conn:on("receive",function(conn,request) rest.handle(conn, request) end)

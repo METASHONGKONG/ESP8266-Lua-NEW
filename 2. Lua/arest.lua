@@ -3,14 +3,14 @@ require "si7021"
 --local M = require "pca8695"
 
 local aREST = {}
-local message
+local message = "Wrong API."
 
 function aREST.handle(conn, request)
 
-    local M2_CW = 5 --右脚正转
-    local M2_ACW = 4 --右脚反转
-    local M1_CW = 2 --左脚正转
-    local M1_ACW = 3 --左脚反转
+    local M2_CW = 5 
+    local M2_ACW = 4 
+    local M1_CW = 2 
+    local M1_ACW = 3	
 	
     -- New request, Find start/end
     local e = string.find(request, "/")
@@ -19,18 +19,22 @@ function aREST.handle(conn, request)
     request_handle = string.sub(request_handle, 0, (e-2))
     print('-----------------------')
     print('Request: ', request_handle)
+		
+	-- if no favicon included, re-ew message everytime
+	-- if favicon included, just use the last message
+	if(string.find(request_handle,"favicon.ico") == nil) then message = "Wrong API." end 
 	
 	-- Pattern: http://IP/mode/value[2]/value[3]/value[4]
 	local value={} ; i=1
 	for str in string.gmatch(request_handle, "([^//]+)") do
-			value[i] = str
-			i = i + 1
+		value[i] = str
+		i = i + 1
 	end
 	local mode = value[1]
 	if mode == nil then mode = "" end
 
 	--------------Wifi---------------------
-    if mode == "wifi" then
+    if mode == "wifi"  and not check_nil(value, 3) then
         if value[2]~=nil and string.len(value[3])>=8 then
             file.open("config_wifi.lua","w+")
             value[2] = string.gsub(value[2],"+"," ")
@@ -44,7 +48,7 @@ function aREST.handle(conn, request)
     end
     
     --------------General---------------------
-    if mode == "mode" then
+    if mode == "mode" and not check_nil(value, 3) then
         if value[3] == "o" then
             gpio.mode(value[2], gpio.OUTPUT)
             message = "" .. value[2] .. " set to output" 
@@ -58,7 +62,7 @@ function aREST.handle(conn, request)
         end 
     end
 
-    if mode == "digital" then
+    if mode == "digital" and not check_nil(value, 3) then
         if value[3] == "0" then 
             gpio.mode(value[2], gpio.OUTPUT)
             gpio.write(value[2], gpio.LOW)
@@ -73,14 +77,14 @@ function aREST.handle(conn, request)
         end
     end
 
-    if mode == "pwm" or mode == "output" then
+    if (mode == "pwm" or mode == "output") and not check_nil(value, 3) then
 		value[3] = error_handling(tonumber(value[3]),0,1023)
 		pwm.setup(value[2],50,value[3])	
 		pwm.start(value[2])
 		message = ""..value[2]..":"..value[3]	
 	end
     
-    if mode == "analog" or mode == "input" then
+    if (mode == "analog" or mode == "input") and not check_nil(value, 2) then
         gpio.mode(0,gpio.OUTPUT)
         if value[2] == 0 then
             gpio.write(0,gpio.HIGH)
@@ -91,14 +95,14 @@ function aREST.handle(conn, request)
     end
       
     --------------Function port---------------------
-    if mode == "servo" then
+    if mode == "servo" and not check_nil(value, 3) then
 		value[3] = error_handling(tonumber(value[3]),0,180)
         pwm.setup(value[2],50,math.floor(33+((128-33)*value[3]/180)))
         pwm.start(value[2])
         message = ""..value[2]..":"..value[3]
     end
     
-    if mode == "motor" then
+    if mode == "motor" and not check_nil(value, 4) then
 		
 		value[4] = error_handling(tonumber(value[4]),0,1023)
 		
@@ -126,15 +130,15 @@ function aREST.handle(conn, request)
     end
     
 	if(value[2] ~= nil) then value[2] = error_handling(tonumber(value[2]),0,1023) end
-	if mode == "forward" then 
+	if mode == "forward" and not check_nil(value, 2) then 
 		message = motor_control(value[2],0,0,value[2],"forward",value[2])
-	elseif mode == "backward" then
+	elseif mode == "backward" and not check_nil(value, 2) then
 		message = motor_control(0,value[2],value[2],0,"backward",value[2])
-	elseif  mode == "left" then
+	elseif  mode == "left" and not check_nil(value, 2) then
 		message = motor_control(value[2],0,value[2],0,"left",value[2])
-	elseif mode == "right" then
+	elseif mode == "right" and not check_nil(value, 2) then
 		message = motor_control(value[2],0,0,value[2],"right",value[2])
-	elseif mode == "stop" then
+	elseif mode == "stop" and not check_nil(value, 2) then
 		message = motor_control(200,200,200,200,"stop",value[2])
     end	
                    
@@ -169,6 +173,15 @@ function error_handling(value,min_value,max_value)
 		num = max_value
 	end
 	return num
+end
+
+function check_nil(value, num)
+	for i=1,num,1 do
+		if value[i] == nil then
+			return true
+		end
+	end
+	return false
 end
 
 return aREST
