@@ -9,21 +9,16 @@ function Initialization()
 	gpio.write(8,gpio.LOW);
 	gpio.mode(0,gpio.OUTPUT);
 	gpio.write(0,gpio.HIGH);
-	
-	local M2_CW = 5 --右脚正转
-	local M2_ACW = 4 --右脚反转
-	local M1_CW = 2 --左脚正转
-	local M1_ACW = 3 --左脚反转
 
-	pwm.setup(M2_CW,50,70)
-	pwm.setup(M2_ACW,50,70)
-	pwm.setup(M1_CW,50,70) 
-	pwm.setup(M1_ACW,50,70) 
+	pwm.setup(5,50,70) --右脚正转
+	pwm.setup(4,50,70) --右脚反转
+	pwm.setup(2,50,70) --左脚正转
+	pwm.setup(3,50,70) --左脚反转
 
-	pwm.start(M2_CW)
-	pwm.start(M2_ACW)
-	pwm.start(M1_CW)
-	pwm.start(M1_ACW)
+	pwm.start(5)
+	pwm.start(4)
+	pwm.start(2)
+	pwm.start(3)
 end
 
 --AP SSID/PW config--                

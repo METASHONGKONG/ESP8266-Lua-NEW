@@ -3,10 +3,10 @@ require "si7021"
 --local M = require "pca8695"
 
 local aREST = {}
+local message
 
 function aREST.handle(conn, request)
 
-    --usb下载口朝向车头--
     local M2_CW = 5 --右脚正转
     local M2_ACW = 4 --右脚反转
     local M1_CW = 2 --左脚正转
@@ -26,9 +26,7 @@ function aREST.handle(conn, request)
 			value[i] = str
 			i = i + 1
 	end
-	
 	local mode = value[1]
-	local message
 
 	--------------Wifi---------------------
     if mode == "wifi" then
@@ -55,7 +53,7 @@ function aREST.handle(conn, request)
         elseif value[3] == "p" then
             pwm.setup(value[2], 50, 0);
             pwm.start(value[2]);
-            answer["message"] = "Pin D" .. value[2] .. " set to PWM";
+            message = "Pin D" .. value[2] .. " set to PWM";
         end 
     end
 
@@ -70,7 +68,7 @@ function aREST.handle(conn, request)
             message = "" .. value[2] .. " set to 1" 
         elseif value[3] == "r" then
             value = gpio.read(value[2])
-            answer['return_value'] = value
+            message = value
         end
     end
 
@@ -116,23 +114,23 @@ function aREST.handle(conn, request)
     if mode == "motor" then
         if value[2] == 1 then 
             if value[3] == "cw" then 
-                pwm.setduty(M1_CW,g) 
+                pwm.setduty(M1_CW,value[4]) 
                 pwm.setduty(M1_ACW,0)
-                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]   
+                message = "Motor " .. value[2] .. " set to " .. value[4] .. " in " .. value[3]   
             elseif value[3] == "acw" then
                 pwm.setduty(M1_CW,0) 
-                pwm.setduty(M1_ACW,g)
-                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]  
+                pwm.setduty(M1_ACW,value[4])
+                message = "Motor " .. value[2] .. " set to " .. value[4] .. " in " .. value[3]  
             end 
         elseif value[2] == 2 then
             if value[3] == "cw" then 
                 pwm.setduty(M2_ACW,0) 
-                pwm.setduty(M2_CW,g)
-                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]   
+                pwm.setduty(M2_CW,value[4])
+                message = "Motor " .. value[2] .. " set to " .. value[4] .. " in " .. value[3]   
             elseif value[3] == "acw" then
-                pwm.setduty(M2_ACW,g) 
+                pwm.setduty(M2_ACW,value[4]) 
                 pwm.setduty(M2_CW,0)
-                message = "Motor " .. value[2] .. " set to " .. g .. " in " .. value[3]  
+                message = "Motor " .. value[2] .. " set to " .. value[4] .. " in " .. value[3]  
             end 
         end
     end
