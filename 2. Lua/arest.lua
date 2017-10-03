@@ -27,6 +27,7 @@ function aREST.handle(conn, request)
 			i = i + 1
 	end
 	local mode = value[1]
+	if mode == nil then mode = "" end
 
 	--------------Wifi---------------------
     if mode == "wifi" then
@@ -73,15 +74,10 @@ function aREST.handle(conn, request)
     end
 
     if mode == "pwm" or mode == "output" then
-		num	= tonumber(value[3])
-        if num <= 0 then
-            num = 0
-        elseif  num >= 1023 then
-            num=1023
-        end
-		pwm.setup(value[2],50,num)	
+		value[3] = error_handling(tonumber(value[3]),0,1023)
+		pwm.setup(value[2],50,value[3])	
 		pwm.start(value[2])
-		message = ""..value[2]..":"..num	
+		message = ""..value[2]..":"..value[3]	
 	end
     
     if mode == "analog" or mode == "input" then
@@ -91,27 +87,21 @@ function aREST.handle(conn, request)
         else
             gpio.write(0,gpio.LOW)
         end
-        value = adc.read(0)
-        if value == 1024 then
-            value = 1023
-        end
-        message = value
+        message = error_handling(adc.read(0),0,1023)
     end
       
     --------------Function port---------------------
     if mode == "servo" then
-        num = tonumber(value[3])
-        if num <= 0 then
-            num = 0
-        elseif  num >= 180 then
-            num=180
-        end
-        pwm.setup(value[2],50,math.floor(33+((128-33)*num/180)))
+		value[3] = error_handling(tonumber(value[3]),0,180)
+        pwm.setup(value[2],50,math.floor(33+((128-33)*value[3]/180)))
         pwm.start(value[2])
-        message = ""..value[2]..":"..num
+        message = ""..value[2]..":"..value[3]
     end
     
     if mode == "motor" then
+		
+		value[4] = error_handling(tonumber(value[4]),0,1023)
+		
         if value[2] == 1 then 
             if value[3] == "cw" then 
                 pwm.setduty(M1_CW,value[4]) 
@@ -135,6 +125,7 @@ function aREST.handle(conn, request)
         end
     end
     
+	if(value[2] ~= nil) then value[2] = error_handling(tonumber(value[2]),0,1023) end
 	if mode == "forward" then 
 		message = motor_control(value[2],0,0,value[2],"forward",value[2])
 	elseif mode == "backward" then
@@ -168,6 +159,16 @@ function motor_control(M2_CW_speed,M2_ACW_speed,M1_CW_speed,M1_ACW_speed,directi
 	pwm.setduty(3,M1_ACW_speed) 
 	return "car "..direction.." "..speed.." now... "
 	
+end
+
+function error_handling(value,min_value,max_value)
+	num = value
+	if num <= min_value then
+		num = min_value
+	elseif  num >= max_value then
+		num = max_value
+	end
+	return num
 end
 
 return aREST
