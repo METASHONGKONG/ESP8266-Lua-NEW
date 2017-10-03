@@ -98,7 +98,6 @@ tmr.alarm(4,5000,0,function()
                 wifi.setmode(wifi.SOFTAP)   
                 
                 display_word(" Time Out")  
-                --display_word("Direct Mode") 
                 tmr.alarm(0,5000,0,function() display_three_row(apcfg.ssid,apcfg.pwd,"192.168.4.1")	end) 
             end
         end)
@@ -113,7 +112,7 @@ tmr.alarm(4,5000,0,function()
     else
         print("run_config: input wifi")
         --require "run_config"
-        display_two_row("NodeOne"," OS Ver1.3")
+        display_two_row("NodeOne"," OS Ver1.4")
         tmr.alarm(5,5000,0,function()  display_word("Input Wifi") end)
         tmr.alarm(0,10000,0,function()
             Initialization()
