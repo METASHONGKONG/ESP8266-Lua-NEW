@@ -144,8 +144,8 @@ function aREST.handle(conn, request)
 		message = motor_control(value[2],0,value[2],0,"left",value[2])
 	elseif mode == "right" and not check_nil(value, 2) then
 		message = motor_control(value[2],0,0,value[2],"right",value[2])
-	elseif mode == "stop" and not check_nil(value, 2) then
-		message = motor_control(200,200,200,200,"stop",value[2])
+	elseif mode == "stop" and not check_nil(value, 1) then
+		message = motor_control(200,200,200,200,"stop","")
     end	
                    
     if mode == "temperature" then
