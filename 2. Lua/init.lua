@@ -92,7 +92,8 @@ tmr.alarm(4,5000,0,function()
                 end
                 
             else
-                tmr.stop(0)
+                Initialization()
+				tmr.stop(0)
 
                 wifi.ap.config(apcfg)  
                 wifi.setmode(wifi.SOFTAP)   
