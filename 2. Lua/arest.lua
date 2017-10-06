@@ -1,6 +1,8 @@
 --╪стьнд╪Ч temperature, PM2.5, RGB--
 require "si7021"
 dofile("PwmSvr_PCA9685.lua")
+PwmSvr.begin()
+PwmSvr.setPWMFreq(60)
 
 local aREST = {}
 local message = "Wrong API."
@@ -100,9 +102,7 @@ function aREST.handle(conn, request)
 		if mode == "servo"  then
 			pwm.setup(value[2],50,math.floor(33+((128-33)*value[3]/180)))
 			pwm.start(value[2])
-		elseif mode == "servo2" then
-			PwmSvr.begin()
-			PwmSvr.setPWMFreq(60)
+		elseif mode == "servo2" then			
 			PwmSvr.setPWM(value[2], 0, math.floor(130+((550-130)*value[3]/180)))
 		end
         message = ""..value[2]..":"..value[3]
