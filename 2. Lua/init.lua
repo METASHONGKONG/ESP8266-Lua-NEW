@@ -28,6 +28,8 @@ apcfg.ssid = string.sub(apcfg.ssid,1,string.len(apcfg.ssid)-1)
 apcfg.pwd = "12345678"
 
 --Reset network wifi--
+pwm.setup(2,50,1023) -- Because pin 3 is initially 1023 value, stop pin 2 first
+pwm.start(2)
 gpio.mode(3,gpio.INPUT)
 
 local timeout = 0        
@@ -61,7 +63,8 @@ display_word("  Welcome")
 --Input wifi/connect wifi--
 tmr.alarm(4,5000,0,function()
     if pcall(function ()require "config_wifi" end) then
-           
+        
+		Initialization()		
         display_three_row("WIFI",ssid,pwd)
         
         srv = nil
@@ -83,7 +86,6 @@ tmr.alarm(4,5000,0,function()
                         display_word("Connecting..") 
                     end
                 else
-					Initialization()  
                     tmr.stop(0)
                     print('IP: ', ip) 
                     len_num = string.len(ip)
@@ -92,7 +94,6 @@ tmr.alarm(4,5000,0,function()
                 end
                 
             else
-                Initialization()
 				tmr.stop(0)
 
                 wifi.ap.config(apcfg)  
@@ -114,9 +115,8 @@ tmr.alarm(4,5000,0,function()
         print("run_config: input wifi")
         --require "run_config"
         display_two_row("NodeOne"," OS Ver1.4")
-        tmr.alarm(5,5000,0,function()  display_word("Input Wifi") end)
+        tmr.alarm(5,5000,0,function()  display_word("Input Wifi") Initialization() end)
         tmr.alarm(0,10000,0,function()
-            Initialization()
             wifi.ap.config(apcfg)  
             wifi.setmode(wifi.SOFTAP)
             display_three_row(apcfg.ssid,apcfg.pwd,"192.168.4.1")
