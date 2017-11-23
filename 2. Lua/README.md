@@ -38,7 +38,8 @@ http://IP/digital/pin/r | Read the value of the digital port (pin: 0-8)
 http://IP/pwm/pin/num | Set pwm value of the pin (pin: 0-8, num: 0-1023)
 http://IP/analog/pin | Read the analog value (pin: 0/1)
 
-
+#### Note: 
+1.	Servo2 API is used for External servo controller.
 
 ### 2. Function pin API
 Actually, there are 5 main functions for our NodeOne. Thus, the below APIs are for your EASY control.
@@ -49,12 +50,12 @@ Actually, there are 5 main functions for our NodeOne. Thus, the below APIs are f
 4.	Motor X2
 5.	I2C X1 (temperature/humidity)
 
-
 Link | Description 
 ----|------
 http://IP/input/pin | Read input pin (pin: 0/1) 
 http://IP/output/pin/num | Set output pin (pin: 0-8, num: 0-1023)
 http://IP/servo/pin/num | Set servo pin (pin: 1-4, num: 0-180)
+http://IP/servo2/pin/num | Set External servo pin (pin: 0-15, num: 0-180)
 http://IP/motor/No/dir/num | Set motor (No: 1/2, dir: cw/acw, num: 0-1023)
 http://IP/temperature | Return temperature 
 http://IP/humidity | Return humidity
