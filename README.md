@@ -16,6 +16,22 @@ ESPlorer: http://esp8266.ru/esplorer/
 
 ## History
 
+Version 1.4 [11/Oct/2017]
+* Flash button to reset wifi, remove the A0 pin to reset wifi function
+* Initially, Direct control for 8266 is work now.
+* Deleted the 192.168.4.1 page to config wifi. Instead, use need to use Set Wifi and Re-set Wifi API. (2 wifi API are added.)
+* Added the servo2 api for external servo controller
+* Allow speed parameter for forward/backward/left/right API
+* Deleted the PM2.5,RGB API
+* Add error handling to prevent reboot issue(Wrong API or exceed the range 0-1023)
+* Code consolidation and Bug fixed
+
+* Bug fix: PWM value must be in the range 0-1023
+* Bug fix: PWM interahcnge with digital, digital can be used
+* Showed the NodeOne OS version page in "input wifi" mode only
+* Showed one more digit of chipID
+* Code consolidation
+
 Version 1.3 [10/Nov/2016]
 * Bug fix: PWM value must be in the range 0-1023
 * Bug fix: PWM interahcnge with digital, digital can be used

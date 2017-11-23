@@ -1,6 +1,8 @@
 --╪стьнд╪Ч temperature, PM2.5, RGB--
 require "si7021"
 dofile("PwmSvr_PCA9685.lua")
+PwmSvr.begin()
+PwmSvr.setPWMFreq(60)
 
 local aREST = {}
 local message = "Wrong API."
@@ -100,9 +102,7 @@ function aREST.handle(conn, request)
 		if mode == "servo"  then
 			pwm.setup(value[2],50,math.floor(33+((128-33)*value[3]/180)))
 			pwm.start(value[2])
-		elseif mode == "servo2" then
-			PwmSvr.begin()
-			PwmSvr.setPWMFreq(60)
+		elseif mode == "servo2" then			
 			PwmSvr.setPWM(value[2], 0, math.floor(130+((550-130)*value[3]/180)))
 		end
         message = ""..value[2]..":"..value[3]
@@ -143,7 +143,7 @@ function aREST.handle(conn, request)
 	elseif  mode == "left" and not check_nil(value, 2) then
 		message = motor_control(value[2],0,value[2],0,"left",value[2])
 	elseif mode == "right" and not check_nil(value, 2) then
-		message = motor_control(value[2],0,0,value[2],"right",value[2])
+		message = motor_control(0,value[2],0,value[2],"right",value[2])
 	elseif mode == "stop" and not check_nil(value, 1) then
 		message = motor_control(200,200,200,200,"stop","")
     end	
