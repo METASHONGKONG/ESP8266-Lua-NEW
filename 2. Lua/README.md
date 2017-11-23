@@ -9,6 +9,8 @@ Direct control mode: The NodeOne act as an router, use your mobile phone to conn
 ## **RESET wifi
 After open the NodeOne in the first 5 second, press the flash button on 8266.
 
+## **PLAY with NodeOne
+
 ### 1. How to play with NodeOne (Direct control - PC connect the wifi from NodeOne):
 1. Go to the SNAP "http://snap.metas-services.com/snap/snap.html"
 2. Connect your pc/smartphone to your NodeOne. (E.g. Wifi: Metas138927, password: 12345678)
@@ -17,6 +19,9 @@ After open the NodeOne in the first 5 second, press the flash button on 8266.
 ### 2. How to play with NodeOne (Both PC and NodeOne connect to the same router):
 1. Go to the SNAP "http://snap.metas-services.com/snap/snap.html"
 2. Go to Robotic tab, find the one block you want to use (IP is on your NodeOne screen).
+
+## **ALL API
+There are 3 types of API categories - (General, Function pin and METAS Car)
 
 ### 1. General API
 These APIs are general API that can control all function of the NodeOne. However, these APIs are for more advanced user.
