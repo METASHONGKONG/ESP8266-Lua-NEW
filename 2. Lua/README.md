@@ -3,7 +3,7 @@
 2. In your browser, type "http://192.168.4.1/wifi/METASHONGKONG/12345678" where METASHONGKONG is your router ssid and 12345678 is the password.
 
 #### Note: 
-1.	If the WIFI cannot be connected successfully after 25s, it will be changed to “Direct control” mode.
+If the WIFI cannot be connected successfully after 25s, it will be changed to “Direct control” mode.
 Direct control mode: The NodeOne act as an router, use your mobile phone to connect the NodeOne and control it directly.
 
 ## **RESET wifi
@@ -21,9 +21,15 @@ After open the NodeOne in the first 5 second, press the flash button on 8266.
 2. Go to Robotic tab, find the one block you want to use (IP is on your NodeOne screen).
 
 ## **ALL API
-There are 3 types of API categories - (General, Function pin and METAS Car)
+There are 4 types of API categories - (WIFI, General, Function pin and METAS Car)
 
-### 1. General API
+### 1. WIFI API
+
+Link | Description 
+----|------
+http://IP/wifi/ssid/pwd | Set the NodeOne to connect router (ssid: Router ssid, pwd: Router pwd)
+
+### 2. General API
 These APIs are general API that can control all function of the NodeOne. However, these APIs are for more advanced user.
 For details, please refer to http://www.funmetas.com.hk/nodeone/
 
@@ -38,10 +44,9 @@ http://IP/digital/pin/r | Read the value of the digital port (pin: 0-8)
 http://IP/pwm/pin/num | Set pwm value of the pin (pin: 0-8, num: 0-1023)
 http://IP/analog/pin | Read the analog value (pin: 0/1)
 
-#### Note: 
-1.	Servo2 API is used for External servo controller.
+#### Note: Servo2 API is used for External servo controller.
 
-### 2. Function pin API
+### 3. Function pin API
 Actually, there are 5 main functions for our NodeOne. Thus, the below APIs are for your EASY control.
 
 1.	Input X2
@@ -60,10 +65,7 @@ http://IP/motor/No/dir/num | Set motor (No: 1/2, dir: cw/acw, num: 0-1023)
 http://IP/temperature | Return temperature 
 http://IP/humidity | Return humidity
 
-
-
-
-### 3. METAS Car API
+### 4. METAS Car API
 The below API is only for METAS car. You can refer to https://www.youtube.com/watch?v=zPAyf31GXbs
 
 Link | Description 

@@ -19,7 +19,7 @@ ESPlorer: http://esp8266.ru/esplorer/
 Version 1.4 [11/Oct/2017]
 * Flash button to reset wifi, remove the A0 pin to reset wifi function
 * Initially, Direct control for 8266 is work now.
-* Deleted the 192.168.4.1 page to config wifi. Instead, use need to use Set Wifi and Re-set Wifi API. (2 wifi API are added.)
+* Deleted the 192.168.4.1 page to config wifi. Instead, need to use Set Wifi API. (Wifi API is added.)
 * Added the servo2 api for external servo controller
 * Allow speed parameter for forward/backward/left/right API
 * Deleted the PM2.5,RGB API
