@@ -1,4 +1,4 @@
-## GET STARTED: Connect your NodeOne to the router
+## **GET STARTED: Connect your NodeOne to the router
 1. Firstly, use your computer or smart phone to connect the wifi emitted from NodeOne. In this example, Wifi: Metas138927, password: 12345678
 2. In your browser, type "http://192.168.4.1/wifi/METASHONGKONG/12345678" where METASHONGKONG is your router ssid and 12345678 is the password.
 
@@ -6,15 +6,15 @@
 1.	If the WIFI cannot be connected successfully after 25s, it will be changed to “Direct control” mode.
 Direct control mode: The NodeOne act as an router, use your mobile phone to connect the NodeOne and control it directly.
 
-## Reset wifi:
+## **RESET wifi
 After open the NodeOne in the first 5 second, press the flash button on 8266.
 
-## 1. How to play with NodeOne (Direct control - PC connect the wifi from NodeOne):
+### 1. How to play with NodeOne (Direct control - PC connect the wifi from NodeOne):
 1. Go to the SNAP "http://snap.metas-services.com/snap/snap.html"
 2. Connect your pc/smartphone to your NodeOne. (E.g. Wifi: Metas138927, password: 12345678)
 3. Go to Robotic tab, find the one block you want to use(IP is 192.168.4.1).
 
-## 2. How to play with NodeOne (Both PC and NodeOne connect to the same router):
+### 2. How to play with NodeOne (Both PC and NodeOne connect to the same router):
 1. Go to the SNAP "http://snap.metas-services.com/snap/snap.html"
 2. Connect your pc/smartphone to your NodeOne. (E.g. Wifi: Metas138927, password: 12345678)
 3. Go to Robotic tab, find the one block you want to use (IP is 192.168.4.1).
@@ -49,9 +49,9 @@ Actually, there are 5 main functions for our NodeOne. Thus, the below APIs are f
 Link | Description 
 ----|------
 http://IP/input/pin | Read input pin (pin: 0/1) 
-http://IP/output/pin/num | Set output pin (pin: 0~8, num: 0~1023)
-http://IP/servo/pin/num | Set servo pin (pin: 1~4, num: 0~180)
-http://IP/motor/No/dir/num | Set motor (No: 1/2, dir: cw/acw, num: 0~1023)
+http://IP/output/pin/num | Set output pin (pin: 0-8, num: 0-1023)
+http://IP/servo/pin/num | Set servo pin (pin: 1-4, num: 0-180)
+http://IP/motor/No/dir/num | Set motor (No: 1/2, dir: cw/acw, num: 0-1023)
 http://IP/temperature | Return temperature 
 http://IP/humidity | Return humidity
 
@@ -63,8 +63,8 @@ The below API is only for METAS car. You can refer to https://www.youtube.com/wa
 
 Link | Description 
 ----|------
-http://IP/forward | Move forward
-http://IP/backward | Move backward
-http://IP/left | Turn left
-http://IP/right | Turn right
+http://IP/forward/speed | Move forward (speed: 0-1023)
+http://IP/backward/speed | Move backward (speed: 0-1023)
+http://IP/left/speed | Turn left (speed: 0-1023)
+http://IP/right/speed | Turn right (speed: 0-1023)
 http://IP/stop | Stop

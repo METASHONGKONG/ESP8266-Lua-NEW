@@ -1,4 +1,4 @@
-# NodeOne OS Version 1.3
+# NodeOne OS Version 1.4
 
 http://www.funmetas.com.hk/nodeone/
 
@@ -25,12 +25,6 @@ Version 1.4 [11/Oct/2017]
 * Deleted the PM2.5,RGB API
 * Add error handling to prevent reboot issue(Wrong API or exceed the range 0-1023)
 * Code consolidation and Bug fixed
-
-* Bug fix: PWM value must be in the range 0-1023
-* Bug fix: PWM interahcnge with digital, digital can be used
-* Showed the NodeOne OS version page in "input wifi" mode only
-* Showed one more digit of chipID
-* Code consolidation
 
 Version 1.3 [10/Nov/2016]
 * Bug fix: PWM value must be in the range 0-1023
