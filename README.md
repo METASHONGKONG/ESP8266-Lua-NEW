@@ -1,4 +1,4 @@
-# NodeOne OS Version 1.3
+# NodeOne OS Version 1.4
 
 http://www.funmetas.com.hk/nodeone/
 
@@ -15,6 +15,16 @@ Lualoader: http://benlo.com/esp8266/
 ESPlorer: http://esp8266.ru/esplorer/
 
 ## History
+
+Version 1.4 [11/Oct/2017]
+* Flash button to reset wifi, remove the A0 pin to reset wifi function
+* Initially, Direct control for 8266 is work now.
+* Deleted the 192.168.4.1 page to config wifi. Instead, need to use Set Wifi API. (Wifi API is added.)
+* Added the servo2 api for external servo controller
+* Allow speed parameter for forward/backward/left/right API
+* Deleted the PM2.5,RGB API
+* Add error handling to prevent reboot issue(Wrong API or exceed the range 0-1023)
+* Code consolidation and Bug fixed
 
 Version 1.3 [10/Nov/2016]
 * Bug fix: PWM value must be in the range 0-1023
