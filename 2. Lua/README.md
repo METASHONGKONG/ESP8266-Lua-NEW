@@ -16,8 +16,7 @@ After open the NodeOne in the first 5 second, press the flash button on 8266.
 
 ### 2. How to play with NodeOne (Both PC and NodeOne connect to the same router):
 1. Go to the SNAP "http://snap.metas-services.com/snap/snap.html"
-2. Connect your pc/smartphone to your NodeOne. (E.g. Wifi: Metas138927, password: 12345678)
-3. Go to Robotic tab, find the one block you want to use (IP is 192.168.4.1).
+2. Go to Robotic tab, find the one block you want to use (IP is on your NodeOne screen).
 
 ### 1. General API
 These APIs are general API that can control all function of the NodeOne. However, these APIs are for more advanced user.
@@ -25,13 +24,13 @@ For details, please refer to http://www.funmetas.com.hk/nodeone/
 
 Link | Description 
 ----|------
-http://IP/mode/pin/o | Set pin as output (pin: 0~8)  
-http://IP/mode/pin/i | Set pin as input (pin: 0~8)
-http://IP/mode/pin/p | Set pin as PWM (pin: 0~8)
-http://IP/digital/pin/0 | Set the output of the pin as 0 (pin: 0~8)
-http://IP/digital/pin/1 | Set the output of the pin as 1 (pin: 0~8)
-http://IP/digital/pin/r | Read the value of the digital port (pin: 0~8)
-http://IP/pwm/pin/num | Set pwm value of the pin (pin: 0~8, num: 0~1023)
+http://IP/mode/pin/o | Set pin as output (pin: 0-8)  
+http://IP/mode/pin/i | Set pin as input (pin: 0-8)
+http://IP/mode/pin/p | Set pin as PWM (pin: 0-8)
+http://IP/digital/pin/0 | Set the output of the pin as 0 (pin: 0-8)
+http://IP/digital/pin/1 | Set the output of the pin as 1 (pin: 0-8)
+http://IP/digital/pin/r | Read the value of the digital port (pin: 0-8)
+http://IP/pwm/pin/num | Set pwm value of the pin (pin: 0-8, num: 0-1023)
 http://IP/analog/pin | Read the analog value (pin: 0/1)
 
 
